@@ -1,12 +1,16 @@
-import { CountButton } from "~features/count-button"
+import { Button, Layout } from "antd"
 
-import "~style.css"
+import { ThemeProvider } from "~theme"
+
+import "~global.css"
 
 function IndexSidePanel() {
   return (
-    <div className="flex items-center justify-center h-16 w-40">
-      <CountButton />
-    </div>
+    <ThemeProvider>
+      <Layout className="min-h-screen">
+        <Button>Button</Button>
+      </Layout>
+    </ThemeProvider>
   )
 }
 

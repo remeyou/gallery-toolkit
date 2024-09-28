@@ -1,12 +1,19 @@
-import { CountButton } from "~features/count-button"
+import { Layout, Typography } from "antd"
 
-import "~style.css"
+import { ThemeProvider } from "~theme"
+
+import "~global.css"
+
+const { Title, Paragraph } = Typography
 
 function IndexPopup() {
   return (
-    <div className="flex items-center justify-center h-16 w-40">
-      <CountButton />
-    </div>
+    <ThemeProvider>
+      <Layout className="w-96 p-4">
+        <Title level={5}>Oops!</Title>
+        <Paragraph>The extension has not supported this website.</Paragraph>
+      </Layout>
+    </ThemeProvider>
   )
 }
 
