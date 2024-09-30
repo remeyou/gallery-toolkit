@@ -1,17 +1,15 @@
 import { Layout, Typography } from "antd"
-
+import "~global.css"
 import { ThemeProvider } from "~theme"
 
-import "~global.css"
-
-const { Title, Paragraph } = Typography
+const { Title, Text } = Typography
 
 function IndexPopup() {
   return (
     <ThemeProvider>
       <Layout className="w-96 p-4">
         <Title level={5}>Oops!</Title>
-        <Paragraph>The extension has not supported this website.</Paragraph>
+        <Text>The extension has not supported this website.</Text>
       </Layout>
     </ThemeProvider>
   )

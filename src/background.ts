@@ -1,11 +1,10 @@
-const URL_ORIGIN = "http://localhost:8000"
-// http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=2222&mkt=en-WW
+import { SUPPORTED_ORIGINS } from "~constants"
 
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
   if (!tab.url) return
   const url = new URL(tab.url)
   // Enables the side panel on google.com
-  if (url.origin === URL_ORIGIN) {
+  if (Object.values(SUPPORTED_ORIGINS).includes(url.origin)) {
     await chrome.sidePanel.setOptions({
       tabId,
       path: "sidepanel.html",
