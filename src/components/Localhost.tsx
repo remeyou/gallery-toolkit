@@ -2,10 +2,11 @@ import { SaveOutlined } from "@ant-design/icons"
 import { Button, Col, Image, Row, Typography } from "antd"
 import { saveAs } from "file-saver"
 import { useEffect, useState } from "react"
-import { SimpleResponse } from "~constants"
-import type { StringifyNode } from "~utils"
+import { SendMessagePath } from "~constants"
+import type { SendMessageParams, StringifyElement } from "~typings"
+import Fallback from "./Fallback"
 
-type PaintInfo = Partial<{
+type WallpaperInfo = Partial<{
   title: string
   desc: string
   date: string
@@ -16,85 +17,95 @@ type PaintInfo = Partial<{
   url: string
 }>
 
+const onSave = (wallpaper: WallpaperInfo) => {
+  const url = new URL(wallpaper.url ?? "")
+  const fileName =
+    (wallpaper.title ||
+      wallpaper.img?.alt ||
+      url.hostname + url.pathname.replaceAll("/", "_") + "_" + Date.now()) +
+    ".jpg"
+  saveAs(wallpaper.img?.src ?? "", fileName)
+}
+
+const transformInfo = (data: StringifyElement[]): WallpaperInfo => {
+  return data.reduce((prev, curr) => {
+    if (curr.tagName === "IMG") {
+      return {
+        ...prev,
+        img: { src: curr.attributes?.src, alt: curr.attributes?.alt }
+      }
+    } else if (
+      curr.attributes?.class?.includes("title") &&
+      curr.textContent?.length
+    ) {
+      return { ...prev, title: curr.textContent[0] }
+    } else if (
+      curr.attributes?.class?.includes("typography") &&
+      curr.textContent?.length
+    ) {
+      return { ...prev, desc: curr.textContent[0] }
+    } else if (curr.tagName === "P" && curr.textContent?.length) {
+      return { ...prev, date: curr.textContent[0] }
+    }
+    return prev
+  }, {})
+}
+
 export default function Localhost() {
-  const [paintInfo, setPaintInfo] = useState<PaintInfo>({})
+  const [wallpaper, setWallpaperInfo] = useState<WallpaperInfo>({})
   useEffect(() => {
     chrome.runtime.onMessage.addListener(
-      (msg: StringifyNode[], sender, sendResp) => {
-        const result: PaintInfo = msg.reduce((prev, curr) => {
-          if (curr.tagName === "IMG") {
-            return {
-              ...prev,
-              img: { src: curr.attributes.src, alt: curr.attributes.alt }
-            }
-          } else if (
-            curr.attributes.class?.includes("title") &&
-            curr.textContent?.length
-          ) {
-            return { ...prev, title: curr.textContent[0] }
-          } else if (
-            curr.attributes.class?.includes("typography") &&
-            curr.textContent?.length
-          ) {
-            return { ...prev, desc: curr.textContent[0] }
-          } else if (curr.tagName === "P" && curr.textContent?.length) {
-            return { ...prev, date: curr.textContent[0] }
-          }
-          return prev
-        }, {})
-        result.url = sender.url
-        setPaintInfo(result)
-        sendResp(SimpleResponse.Success)
+      (msg: SendMessageParams<StringifyElement[]>, sender, sendResp) => {
+        switch (msg.path) {
+          case SendMessagePath.InspectArt:
+            setWallpaperInfo({
+              ...transformInfo(msg.data ?? []),
+              url: sender.url
+            })
+            break
+          case SendMessagePath.DownloadArt:
+            const result = transformInfo(msg.data ?? [])
+            result.url = sender.url
+            setWallpaperInfo(result)
+            onSave(result)
+            break
+        }
+        sendResp()
       }
     )
   }, [])
 
-  const onSave = () => {
-    const url = new URL(paintInfo.url)
-    const fileName =
-      (paintInfo.title ||
-        paintInfo.img.alt ||
-        url.hostname + url.pathname.replaceAll("/", "_") + "_" + Date.now()) +
-      ".jpg"
-    saveAs(paintInfo.img.src, fileName)
-  }
-
-  if (!Object.keys(paintInfo).length) {
-    return (
-      <Typography.Paragraph>
-        Anyone who paints has not been selected, Click 🔍︎ on the top right of a
-        paint to continue.
-      </Typography.Paragraph>
-    )
+  if (!Object.keys(wallpaper).length) {
+    return <Fallback />
   }
   return (
     <div>
       <Row>
-        {paintInfo.img && (
+        {wallpaper.img && (
           <Col span={24} order={0}>
-            <Image src={paintInfo.img.src} alt={paintInfo.img.alt} />
+            <Image src={wallpaper.img.src} alt={wallpaper.img.alt} />
           </Col>
         )}
-        {paintInfo.title && (
+        {wallpaper.title && (
           <Col span={24} order={1}>
-            <Typography.Title level={4}>{paintInfo.title}</Typography.Title>
+            <Typography.Title level={4}>{wallpaper.title}</Typography.Title>
           </Col>
         )}
-        {paintInfo.desc && (
+        {wallpaper.desc && (
           <Col span={24} order={2}>
-            <Typography.Text>{paintInfo.desc}</Typography.Text>
+            <Typography.Text>{wallpaper.desc}</Typography.Text>
           </Col>
         )}
-        {paintInfo.date && (
+        {wallpaper.date && (
           <Col span={24} order={3}>
             <Typography.Paragraph type="secondary">
-              {paintInfo.date}
+              {wallpaper.date}
             </Typography.Paragraph>
           </Col>
         )}
       </Row>
-      {paintInfo.img?.src && (
-        <Button icon={<SaveOutlined />} onClick={onSave}>
+      {wallpaper.img?.src && (
+        <Button icon={<SaveOutlined />} onClick={() => onSave(wallpaper)}>
           Save
         </Button>
       )}

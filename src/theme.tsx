@@ -13,7 +13,12 @@ export const ThemeProvider = ({ children = null as ReactNode }) => {
         },
         algorithm: checkDarkMode()
           ? theme.darkAlgorithm
-          : theme.defaultAlgorithm
+          : theme.defaultAlgorithm,
+        components: {
+          Tag: {
+            marginXS: 0
+          }
+        }
       }}>
       {children}
     </ConfigProvider>
