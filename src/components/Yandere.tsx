@@ -1,5 +1,15 @@
 import { SaveOutlined } from "@ant-design/icons"
-import { Button, Col, Image, Modal, Row, Space, Tag, Typography } from "antd"
+import {
+  Button,
+  Col,
+  Image,
+  message,
+  Modal,
+  Row,
+  Space,
+  Tag,
+  Typography
+} from "antd"
 import saveAs from "file-saver"
 import { useEffect, useState } from "react"
 import { SendMessagePath } from "~constants"
@@ -30,6 +40,7 @@ const onSave = (post: Post) => {
   const filename =
     post.thumbPath?.replace("/", "_") ||
     url.hostname + url.pathname.replaceAll("/", "_")
+  message.info("Staring download...")
   saveAs(post.directLink, filename)
 }
 

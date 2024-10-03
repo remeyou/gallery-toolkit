@@ -1,5 +1,5 @@
 import { SaveOutlined } from "@ant-design/icons"
-import { Button, Col, Image, Row, Typography } from "antd"
+import { Button, Col, Image, message, Row, Typography } from "antd"
 import { saveAs } from "file-saver"
 import { useEffect, useState } from "react"
 import { SendMessagePath } from "~constants"
@@ -24,6 +24,7 @@ const onSave = (wallpaper: WallpaperInfo) => {
       wallpaper.img?.alt ||
       url.hostname + url.pathname.replaceAll("/", "_") + "_" + Date.now()) +
     ".jpg"
+  message.info("Staring download...")
   saveAs(wallpaper.img?.src ?? "", fileName)
 }
 

@@ -78,19 +78,10 @@ const EngageOverlay = () => {
                 style={{ marginBottom: 0 }}>
                 <Radio.Group
                   options={[
-                    {
-                      label: ClickBehavior.Default,
-                      value: ClickBehavior.Default
-                    },
-                    {
-                      label: ClickBehavior.Inspect,
-                      value: ClickBehavior.Inspect
-                    },
-                    {
-                      label: ClickBehavior.Download,
-                      value: ClickBehavior.Download
-                    }
-                  ]}
+                    ClickBehavior.Default,
+                    ClickBehavior.Inspect,
+                    ClickBehavior.Download
+                  ].map((label) => ({ label, value: label }))}
                 />
               </Form.Item>
             </Form>
