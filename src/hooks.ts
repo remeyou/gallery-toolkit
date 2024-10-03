@@ -16,6 +16,17 @@ const collectEls = (elementSelector: string): Promise<JQuery<Element>> => {
   }
 }
 
+const baseStyle = {
+  position: "absolute",
+  top: "8px",
+  right: "8px",
+  padding: "4px 6px",
+  backgroundColor: "rgba(255, 255, 255, 0.3)",
+  borderRadius: "50%",
+  opacity: 0,
+  cursor: "pointer"
+}
+
 const modifyEls = (
   els: JQuery<Element>,
   defaultClickBehavior: ClickBehavior
@@ -27,21 +38,12 @@ const modifyEls = (
       $el.removeClass("javascript-hide")
     }
 
-    const baseStyle = {
-      position: "absolute",
-      top: "8px",
-      right: "8px",
-      padding: "4px 6px",
-      backgroundColor: "rgba(255, 255, 255, 0.3)",
-      borderRadius: "50%",
-      opacity: 0,
-      cursor: "pointer"
-    }
     const elInfo = stringifyFlattenElement(el)
     const onInspectBtnClick = (
       e: JQuery.ClickEvent<Element, undefined, Element, Element>
     ) => {
       e.preventDefault()
+      e.stopPropagation()
       sendMessageToExtension({
         path: SendMessagePath.InspectArt,
         data: elInfo
@@ -55,6 +57,7 @@ const modifyEls = (
       e: JQuery.ClickEvent<Element, undefined, Element, Element>
     ) => {
       e.preventDefault()
+      e.stopPropagation()
       sendMessageToExtension({
         path: SendMessagePath.DownloadArt,
         data: elInfo
@@ -104,7 +107,6 @@ export const useContentScript = (defaultClickBehavior: ClickBehavior) => {
             defaultClickBehavior
           )
           break
-
         default:
           throw new Error(
             "The location.origin cannot match any supported origin."

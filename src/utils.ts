@@ -1,4 +1,11 @@
-import type { SendMessageParams, StringifyElement } from "~typings"
+import { message, Modal } from "antd"
+import saveAs from "file-saver"
+import { SendMessageResponseCode } from "~constants"
+import type {
+  SendMessageParams,
+  SendMessageResponse,
+  StringifyElement
+} from "~typings"
 
 export function checkDarkMode() {
   // Check if the browser supports prefers-color-scheme
@@ -40,17 +47,45 @@ export const stringifyFlattenElement = (el: Element): StringifyElement[] => {
   return list
 }
 
-export const sendMessageToExtension = <T = unknown>(
-  msg: SendMessageParams<T>,
-  timeout: number = 1000
-) => {
+type Response<R> = SendMessageResponse<R> | undefined
+export const sendMessageToExtension = <T = unknown, R = unknown>(
+  msg: SendMessageParams<T>
+): Promise<Response<R>> => {
   return new Promise((resolve, reject) => {
-    const flag = setTimeout(() => {
-      reject("Gallery Toolkit: sendMessageToExtension timeout.")
-    }, timeout)
-    chrome.runtime.sendMessage(msg, (resp) => {
-      clearTimeout(flag)
-      resolve(resp)
+    chrome.runtime.sendMessage(msg, (resp: Response<R>) => {
+      if (resp?.code === SendMessageResponseCode.OK) {
+        resolve(resp)
+      }
+      reject(resp)
     })
   })
+    .then((v) => {
+      return v as Response<R>
+    })
+    .catch((r) => {
+      if (!r) {
+        message.warning(
+          "Gallery Toolkit: sendMessageToExtension responds nothing; did you open the side panel?"
+        )
+      }
+      return Promise.reject(r)
+    })
+}
+
+export const downloadContent = (
+  data?: Blob | string,
+  filename?: string,
+  errorInfo?: unknown
+) => {
+  if (!data) {
+    Modal.error({
+      title: "Download error",
+      content:
+        "The download link was not existing; check the browser developer tool console for more info."
+    })
+    console.error("Download error", errorInfo)
+    return
+  }
+  message.info("Staring download...")
+  saveAs(data, filename)
 }

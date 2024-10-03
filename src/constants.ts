@@ -3,9 +3,9 @@ export const SUPPORTED_ORIGINS = {
   yandere: "https://yande.re"
 }
 
-export const enum SimpleResponse {
-  Success = 1,
-  Error
+export const enum SendMessageResponseCode {
+  OK = 200,
+  InternalServerError = 500
 }
 
 export const enum SendMessagePath {

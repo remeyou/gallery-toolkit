@@ -1,77 +1,76 @@
 import { SaveOutlined } from "@ant-design/icons"
-import { Button, Col, Image, message, Row, Typography } from "antd"
-import { saveAs } from "file-saver"
+import { Button, Col, Image, Row, Typography } from "antd"
 import { useEffect, useState } from "react"
-import { SendMessagePath } from "~constants"
-import type { SendMessageParams, StringifyElement } from "~typings"
+import { SendMessagePath, SendMessageResponseCode } from "~constants"
+import type {
+  SendMessageParams,
+  SendMessageResponse,
+  StringifyElement
+} from "~typings"
+import { downloadContent } from "~utils"
 import Fallback from "./Fallback"
 
 type WallpaperInfo = Partial<{
   title: string
   desc: string
   date: string
-  img: Partial<{
-    src: string
-    alt: string
-  }>
-  url: string
+  src: string
+  alt: string
+  source: string
 }>
 
 const onSave = (wallpaper: WallpaperInfo) => {
-  const url = new URL(wallpaper.url ?? "")
-  const fileName =
-    (wallpaper.title ||
-      wallpaper.img?.alt ||
-      url.hostname + url.pathname.replaceAll("/", "_") + "_" + Date.now()) +
-    ".jpg"
-  message.info("Staring download...")
-  saveAs(wallpaper.img?.src ?? "", fileName)
+  const url = new URL(wallpaper.source ?? "")
+  const filename =
+    wallpaper.title ||
+    wallpaper.alt ||
+    url.hostname + url.pathname.replaceAll("/", "_") + "_" + Date.now()
+  downloadContent(wallpaper.src, filename, wallpaper)
 }
 
-const transformInfo = (data: StringifyElement[]): WallpaperInfo => {
+const transformInfo = (data: StringifyElement[]) => {
   return data.reduce((prev, curr) => {
-    if (curr.tagName === "IMG") {
+    const { tagName, attributes, textContent } = curr
+    if (tagName === "IMG") {
       return {
         ...prev,
-        img: { src: curr.attributes?.src, alt: curr.attributes?.alt }
+        src: attributes?.src,
+        alt: attributes?.alt
       }
+    } else if (attributes?.class?.includes("title") && textContent?.length) {
+      return { ...prev, title: textContent[0] }
     } else if (
-      curr.attributes?.class?.includes("title") &&
-      curr.textContent?.length
+      attributes?.class?.includes("typography") &&
+      textContent?.length
     ) {
-      return { ...prev, title: curr.textContent[0] }
-    } else if (
-      curr.attributes?.class?.includes("typography") &&
-      curr.textContent?.length
-    ) {
-      return { ...prev, desc: curr.textContent[0] }
-    } else if (curr.tagName === "P" && curr.textContent?.length) {
-      return { ...prev, date: curr.textContent[0] }
+      return { ...prev, desc: textContent[0] }
+    } else if (tagName === "P" && textContent?.length) {
+      return { ...prev, date: textContent[0] }
     }
     return prev
-  }, {})
+  }, {}) as WallpaperInfo
 }
 
 export default function Localhost() {
-  const [wallpaper, setWallpaperInfo] = useState<WallpaperInfo>({})
+  const [wallpaper, setWallpaper] = useState<WallpaperInfo>({})
   useEffect(() => {
     chrome.runtime.onMessage.addListener(
-      (msg: SendMessageParams<StringifyElement[]>, sender, sendResp) => {
+      (
+        msg: SendMessageParams<StringifyElement[]>,
+        sender,
+        sendResp: (response: SendMessageResponse) => void
+      ) => {
+        const result = { ...transformInfo(msg.data ?? []), source: sender.url }
         switch (msg.path) {
           case SendMessagePath.InspectArt:
-            setWallpaperInfo({
-              ...transformInfo(msg.data ?? []),
-              url: sender.url
-            })
+            setWallpaper(result)
             break
           case SendMessagePath.DownloadArt:
-            const result = transformInfo(msg.data ?? [])
-            result.url = sender.url
-            setWallpaperInfo(result)
+            setWallpaper(result)
             onSave(result)
             break
         }
-        sendResp()
+        sendResp({ code: SendMessageResponseCode.OK })
       }
     )
   }, [])
@@ -79,33 +78,32 @@ export default function Localhost() {
   if (!Object.keys(wallpaper).length) {
     return <Fallback />
   }
+  const { src, alt, title, desc, date } = wallpaper
   return (
     <div>
       <Row>
-        {wallpaper.img && (
+        {src && (
           <Col span={24} order={0}>
-            <Image src={wallpaper.img.src} alt={wallpaper.img.alt} />
+            <Image src={src} alt={alt} />
           </Col>
         )}
-        {wallpaper.title && (
+        {title && (
           <Col span={24} order={1}>
-            <Typography.Title level={4}>{wallpaper.title}</Typography.Title>
+            <Typography.Title level={4}>{title}</Typography.Title>
           </Col>
         )}
-        {wallpaper.desc && (
+        {desc && (
           <Col span={24} order={2}>
-            <Typography.Text>{wallpaper.desc}</Typography.Text>
+            <Typography.Text>{desc}</Typography.Text>
           </Col>
         )}
-        {wallpaper.date && (
+        {date && (
           <Col span={24} order={3}>
-            <Typography.Paragraph type="secondary">
-              {wallpaper.date}
-            </Typography.Paragraph>
+            <Typography.Paragraph type="secondary">{date}</Typography.Paragraph>
           </Col>
         )}
       </Row>
-      {wallpaper.img?.src && (
+      {src && (
         <Button icon={<SaveOutlined />} onClick={() => onSave(wallpaper)}>
           Save
         </Button>

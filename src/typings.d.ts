@@ -1,8 +1,8 @@
-export type StringifyElement = {
+export type StringifyElement = Partial<{
   tagName: string
-  attributes?: Record<string, string>
-  textContent?: string[]
-}
+  attributes: Record<string, string>
+  textContent: string[]
+}>
 
 export interface SendMessageParams<T = null> {
   path: string

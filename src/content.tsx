@@ -10,9 +10,7 @@ import { ClickBehavior, SUPPORTED_ORIGINS } from "~constants"
 import { useContentScript } from "~hooks"
 import { ThemeProvider } from "~theme"
 
-const matches = Object.values(SUPPORTED_ORIGINS)
-  .map((s) => s + "/*")
-  .concat(["https://developer.chrome.google.cn/*"])
+const matches = Object.values(SUPPORTED_ORIGINS).map((s) => s + "/*")
 export const config: PlasmoCSConfig = {
   matches
 }
