@@ -40,6 +40,10 @@ export const getStyle = () => {
 const LOCAL_STORAGE_KEY = "GALLERY_TOOLKIT_DEFAULT_CLICK_BEHAVIOR"
 
 const EngageOverlay = () => {
+  if (matches.every((url) => !url.includes(location.origin))) {
+    return null
+  }
+
   const [defaultClickBehavior, setDefaultClickBehavior] =
     useState<ClickBehavior>(
       (localStorage.getItem(LOCAL_STORAGE_KEY) as ClickBehavior) ??

@@ -64,9 +64,10 @@ export const sendMessageToExtension = <T = unknown, R = unknown>(
     })
     .catch((r) => {
       if (!r) {
-        message.warning(
+        const errMsg =
           "Gallery Toolkit: sendMessageToExtension responds nothing; did you open the side panel?"
-        )
+        alert(errMsg)
+        return Promise.reject(errMsg)
       }
       return Promise.reject(r)
     })

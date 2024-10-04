@@ -96,24 +96,16 @@ const modifyEls = (
 
 export const useContentScript = (defaultClickBehavior: ClickBehavior) => {
   const exec = async () => {
-    try {
-      switch (location.origin) {
-        case SUPPORTED_ORIGINS.localhost:
-          modifyEls(await collectEls(".ant-card"), defaultClickBehavior)
-          break
-        case SUPPORTED_ORIGINS.yandere:
-          modifyEls(
-            await collectEls("#post-list-posts > li"),
-            defaultClickBehavior
-          )
-          break
-        default:
-          throw new Error(
-            "The location.origin cannot match any supported origin."
-          )
-      }
-    } catch (error) {
-      console.error("useContentScript error", error)
+    switch (location.origin) {
+      case SUPPORTED_ORIGINS.localhost:
+        modifyEls(await collectEls(".ant-card"), defaultClickBehavior)
+        break
+      case SUPPORTED_ORIGINS.yandere:
+        modifyEls(
+          await collectEls("#post-list-posts > li"),
+          defaultClickBehavior
+        )
+        break
     }
   }
 
