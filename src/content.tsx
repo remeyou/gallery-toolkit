@@ -1,12 +1,12 @@
 import { StyleProvider } from "@ant-design/cssinjs"
 import { ToolOutlined } from "@ant-design/icons"
-import { Form, Popover, Radio } from "antd"
+import { Divider, Form, Popover, Radio } from "antd"
 import Button from "antd/es/button"
 import antdResetCssText from "data-text:antd/dist/reset.css"
 // import globalCssText from "data-text:~global.css"
 import type { PlasmoCSConfig, PlasmoGetShadowHostId } from "plasmo"
 import { useState } from "react"
-import { ClickBehavior, SUPPORTED_ORIGINS } from "~constants"
+import { ClickBehavior, SUPPORTED_ORIGINS, Truthy } from "~constants"
 import { useContentScript } from "~hooks"
 import { ThemeProvider } from "~theme"
 
@@ -37,7 +37,10 @@ export const getStyle = () => {
   return style
 }
 
-const LOCAL_STORAGE_KEY = "GALLERY_TOOLKIT_DEFAULT_CLICK_BEHAVIOR"
+const LOCAL_STORAGE_KEY = {
+  defaultClickBehavior: "GALLERY_TOOLKIT_DEFAULT_CLICK_BEHAVIOR",
+  hiddenPosts: "HIDDEN_POSTS"
+}
 
 const EngageOverlay = () => {
   if (matches.every((url) => !url.includes(location.origin))) {
@@ -46,11 +49,35 @@ const EngageOverlay = () => {
 
   const [defaultClickBehavior, setDefaultClickBehavior] =
     useState<ClickBehavior>(
-      (localStorage.getItem(LOCAL_STORAGE_KEY) as ClickBehavior) ??
-        ClickBehavior.Default
+      (localStorage.getItem(
+        LOCAL_STORAGE_KEY.defaultClickBehavior
+      ) as ClickBehavior) ?? ClickBehavior.Default
     )
+  const [hiddenPosts, setHiddenPosts] = useState(
+    Number(localStorage.getItem(LOCAL_STORAGE_KEY.hiddenPosts))
+  )
 
-  useContentScript(defaultClickBehavior)
+  const { locationOrigin } = useContentScript({
+    defaultClickBehavior,
+    hiddenPosts
+  })
+
+  const onValuesChange = (changedValues: any, values: any) => {
+    if (changedValues.defaultClickBehavior) {
+      setDefaultClickBehavior(changedValues.defaultClickBehavior)
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY.defaultClickBehavior,
+        changedValues.defaultClickBehavior
+      )
+    }
+    if (changedValues.hiddenPosts) {
+      setHiddenPosts(changedValues.hiddenPosts)
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY.hiddenPosts,
+        changedValues.hiddenPosts
+      )
+    }
+  }
 
   return (
     <ThemeProvider>
@@ -64,16 +91,9 @@ const EngageOverlay = () => {
           content={
             <Form
               layout="vertical"
-              onValuesChange={(changed) => {
-                if (changed.defaultClickBehavior) {
-                  setDefaultClickBehavior(changed.defaultClickBehavior)
-                  localStorage.setItem(
-                    LOCAL_STORAGE_KEY,
-                    changed.defaultClickBehavior
-                  )
-                }
-              }}
-              initialValues={{ defaultClickBehavior }}>
+              onValuesChange={onValuesChange}
+              initialValues={{ defaultClickBehavior, hiddenPosts }}>
+              <Divider />
               <Form.Item
                 name="defaultClickBehavior"
                 label="Default click behavior"
@@ -86,6 +106,22 @@ const EngageOverlay = () => {
                   ].map((label) => ({ label, value: label }))}
                 />
               </Form.Item>
+              {locationOrigin === SUPPORTED_ORIGINS.yandere && (
+                <>
+                  <Divider />
+                  <Form.Item
+                    name="hiddenPosts"
+                    label="Hidden posts"
+                    style={{ marginBottom: 0 }}>
+                    <Radio.Group
+                      options={[
+                        { label: "Hidden", value: Truthy.False },
+                        { label: "Show all", value: Truthy.True }
+                      ]}
+                    />
+                  </Form.Item>
+                </>
+              )}
             </Form>
           }>
           <Button id="gallery-toolkit-trigger" shape="circle" size="large">

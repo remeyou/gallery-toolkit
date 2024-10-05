@@ -17,6 +17,9 @@ export const ThemeProvider = ({ children = null as ReactNode }) => {
         components: {
           Tag: {
             marginXS: 0
+          },
+          Divider: {
+            marginLG: 0
           }
         }
       }}>

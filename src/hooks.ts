@@ -1,7 +1,12 @@
 import $ from "jquery"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { ClickBehavior, SUPPORTED_ORIGINS, SendMessagePath } from "~constants"
 import { sendMessageToExtension, stringifyFlattenElement } from "~utils"
+
+interface ContentScriptOptions {
+  defaultClickBehavior: ClickBehavior
+  hiddenPosts: number
+}
 
 const collectEls = (elementSelector: string): Promise<JQuery<Element>> => {
   const els = $(elementSelector)
@@ -27,14 +32,11 @@ const baseStyle = {
   cursor: "pointer"
 }
 
-const modifyEls = (
-  els: JQuery<Element>,
-  defaultClickBehavior: ClickBehavior
-) => {
+const modifyEls = (els: JQuery<Element>, options: ContentScriptOptions) => {
   els.each((i, el) => {
     const $el = $(el)
 
-    if ($el.is(".javascript-hide")) {
+    if (options.hiddenPosts && $el.is(".javascript-hide")) {
       $el.removeClass("javascript-hide")
     }
 
@@ -83,7 +85,7 @@ const modifyEls = (
         position: "relative"
       })
       .append([$inspectBtn, $downloadBtn])
-    switch (defaultClickBehavior) {
+    switch (options.defaultClickBehavior) {
       case ClickBehavior.Inspect:
         $el.off("click").on("click", onInspectBtnClick)
         break
@@ -94,22 +96,27 @@ const modifyEls = (
   })
 }
 
-export const useContentScript = (defaultClickBehavior: ClickBehavior) => {
+export const useContentScript = (options: ContentScriptOptions) => {
+  const [locationOrigin, setLocationOrigin] = useState<
+    (typeof SUPPORTED_ORIGINS)[keyof typeof SUPPORTED_ORIGINS]
+  >(SUPPORTED_ORIGINS.localhost)
+
   const exec = async () => {
     switch (location.origin) {
       case SUPPORTED_ORIGINS.localhost:
-        modifyEls(await collectEls(".ant-card"), defaultClickBehavior)
+        setLocationOrigin(SUPPORTED_ORIGINS.localhost)
+        modifyEls(await collectEls(".ant-card"), options)
         break
       case SUPPORTED_ORIGINS.yandere:
-        modifyEls(
-          await collectEls("#post-list-posts > li"),
-          defaultClickBehavior
-        )
+        setLocationOrigin(SUPPORTED_ORIGINS.yandere)
+        modifyEls(await collectEls("#post-list-posts > li"), options)
         break
     }
   }
 
   useEffect(() => {
     exec()
-  }, [defaultClickBehavior])
+  }, [options])
+
+  return { locationOrigin }
 }

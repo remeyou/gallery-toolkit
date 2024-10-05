@@ -1,7 +1,7 @@
 export const SUPPORTED_ORIGINS = {
   localhost: "http://localhost:8000",
   yandere: "https://yande.re"
-}
+} as const
 
 export const enum SendMessageResponseCode {
   OK = 200,
@@ -17,4 +17,9 @@ export const enum ClickBehavior {
   Default = "Default",
   Inspect = "Inspect",
   Download = "Download"
+}
+
+export const enum Truthy {
+  False,
+  True
 }
