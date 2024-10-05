@@ -136,7 +136,7 @@ export default function Yandere() {
             </Space>
           </Col>
         )}
-        {score && (
+        {!Number.isNaN(score) && (
           <Col span={24} order={4}>
             <Space>
               <Typography.Text type="secondary">Score:</Typography.Text>
