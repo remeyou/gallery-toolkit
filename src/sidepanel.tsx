@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import Localhost from "~components/Localhost"
 import Yandere from "~components/Yandere"
 import { SUPPORTED_ORIGINS } from "~constants"
-import "~global.css"
+import "~tailwind.css"
 import { ThemeProvider } from "~theme"
 
 function IndexSidePanel() {

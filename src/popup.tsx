@@ -1,5 +1,5 @@
 import { Layout, Typography } from "antd"
-import "~global.css"
+import "~tailwind.css"
 import { ThemeProvider } from "~theme"
 
 const { Title, Text } = Typography

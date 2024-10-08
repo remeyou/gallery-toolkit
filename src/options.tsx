@@ -1,21 +1,13 @@
-import Button from "antd/es/button"
-
+import { Layout, Typography } from "antd"
+import "~tailwind.css"
 import { ThemeProvider } from "~theme"
 
 function IndexOption() {
   return (
     <ThemeProvider>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          padding: 16
-        }}>
-        <h1>
-          Welcome to your <a href="https://www.plasmo.com">Plasmo</a> Extension!
-        </h1>
-        <Button type="primary">Fascinating</Button>
-      </div>
+      <Layout className="min-h-screen p-4">
+        <Typography.Title>Gallery toolkit options</Typography.Title>
+      </Layout>
     </ThemeProvider>
   )
 }

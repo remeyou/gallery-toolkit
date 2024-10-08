@@ -4,8 +4,8 @@ import { ClickBehavior, SUPPORTED_ORIGINS, SendMessagePath } from "~constants"
 import { sendMessageToExtension, stringifyFlattenElement } from "~utils"
 
 interface ContentScriptOptions {
-  defaultClickBehavior: ClickBehavior
-  hiddenPosts: number
+  defaultClickBehavior?: ClickBehavior
+  hiddenPosts?: number
 }
 
 const collectEls = (elementSelector: string): Promise<JQuery<Element>> => {
@@ -27,7 +27,7 @@ const baseStyle = {
   right: "8px",
   padding: "4px 6px",
   backgroundColor: "rgba(255, 255, 255, 0.3)",
-  borderRadius: "50%",
+  borderRadius: "25%",
   opacity: 0,
   cursor: "pointer"
 }

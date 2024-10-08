@@ -1,11 +1,11 @@
 import { StyleProvider } from "@ant-design/cssinjs"
 import { ToolOutlined } from "@ant-design/icons"
+import { useLocalStorageState } from "ahooks"
 import { Divider, Form, Popover, Radio } from "antd"
 import Button from "antd/es/button"
 import antdResetCssText from "data-text:antd/dist/reset.css"
-// import globalCssText from "data-text:~global.css"
+// import tailwindCssText from "data-text:~tailwind.css"
 import type { PlasmoCSConfig, PlasmoGetShadowHostId } from "plasmo"
-import { useState } from "react"
 import { ClickBehavior, SUPPORTED_ORIGINS, Truthy } from "~constants"
 import { useContentScript } from "~hooks"
 import { ThemeProvider } from "~theme"
@@ -37,45 +37,34 @@ export const getStyle = () => {
   return style
 }
 
-const LOCAL_STORAGE_KEY = {
-  defaultClickBehavior: "GALLERY_TOOLKIT_DEFAULT_CLICK_BEHAVIOR",
-  hiddenPosts: "HIDDEN_POSTS"
-}
-
 const EngageOverlay = () => {
   if (matches.every((url) => !url.includes(location.origin))) {
     return null
   }
 
   const [defaultClickBehavior, setDefaultClickBehavior] =
-    useState<ClickBehavior>(
-      (localStorage.getItem(
-        LOCAL_STORAGE_KEY.defaultClickBehavior
-      ) as ClickBehavior) ?? ClickBehavior.Default
+    useLocalStorageState<ClickBehavior>(
+      "GALLERY_TOOLKIT_DEFAULT_CLICK_BEHAVIOR",
+      { defaultValue: ClickBehavior.Default }
     )
-  const [hiddenPosts, setHiddenPosts] = useState(
-    Number(localStorage.getItem(LOCAL_STORAGE_KEY.hiddenPosts))
-  )
+  const [hiddenPosts, setHiddenPosts] = useLocalStorageState("HIDDEN_POSTS", {
+    defaultValue: Truthy.False,
+    deserializer(value) {
+      return Number(JSON.parse(value))
+    }
+  })
 
   const { locationOrigin } = useContentScript({
     defaultClickBehavior,
     hiddenPosts
   })
 
-  const onValuesChange = (changedValues: any, values: any) => {
+  const onValuesChange = (changedValues: Record<string, any>) => {
     if (changedValues.defaultClickBehavior) {
       setDefaultClickBehavior(changedValues.defaultClickBehavior)
-      localStorage.setItem(
-        LOCAL_STORAGE_KEY.defaultClickBehavior,
-        changedValues.defaultClickBehavior
-      )
     }
     if (changedValues.hiddenPosts) {
       setHiddenPosts(changedValues.hiddenPosts)
-      localStorage.setItem(
-        LOCAL_STORAGE_KEY.hiddenPosts,
-        changedValues.hiddenPosts
-      )
     }
   }
 

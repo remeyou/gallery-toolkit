@@ -10,17 +10,5 @@ export default {
   trailingComma: "none",
   bracketSpacing: true,
   bracketSameLine: true,
-  plugins: ["prettier-plugin-organize-imports"],
-  importOrder: [
-    "<BUILTIN_MODULES>", // Node.js built-in modules
-    "<THIRD_PARTY_MODULES>", // Imports not matched by other special words or groups.
-    "", // Empty line
-    "^@plasmo/(.*)$",
-    "",
-    "^@plasmohq/(.*)$",
-    "",
-    "^~(.*)$",
-    "",
-    "^[./]"
-  ]
+  plugins: ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"]
 }
