@@ -1,33 +1,26 @@
 {
   "name": "gallery-toolkit",
-  "displayName": "Gallery toolkit",
+  "displayName": "Gallery Toolkit",
   "version": "0.0.1",
   "description": "Enhance your gallery view experience.",
   "author": "Reme You",
   "scripts": {
     "dev": "plasmo dev",
-    "build": "plasmo build"
+    "build": "plasmo build",
+    "package": "plasmo package"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "1.18.2",
-    "@ant-design/icons": "^5.5.1",
-    "ahooks": "^3.8.1",
-    "antd": "5.13.2",
-    "file-saver": "^2.0.5",
-    "jquery": "^3.7.1",
-    "plasmo": "0.89.2",
+    "@headlessui/react": "^2.1.9",
+    "plasmo": "0.89.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@types/chrome": "0.0.258",
-    "@types/file-saver": "^2.0.7",
-    "@types/jquery": "^3.5.31",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
     "autoprefixer": "^10.4.20",
-    "chrome-types": "^0.1.307",
     "postcss": "^8.4.47",
     "prettier": "3.2.4",
     "prettier-plugin-organize-imports": "^4.1.0",
