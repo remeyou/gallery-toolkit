@@ -19,7 +19,7 @@ export default function Popover({ trigger, children, anchor }: Props) {
       <PopoverPanel
         transition
         anchor={anchor}
-        className="divide-y divide-black/5 rounded-xl bg-white text-sm/6 transition duration-200 ease-in-out [--anchor-gap:var(--spacing-5)] data-[closed]:-translate-y-1 data-[closed]:opacity-0 dark:divide-white/5 dark:bg-gray-800 dark:text-white"
+        className="divide-y divide-black/5 rounded-xl bg-white text-sm/6 transition duration-200 ease-in-out [--anchor-gap:var(--spacing-5)] data-[closed]:-translate-y-1 data-[closed]:opacity-0 dark:divide-white/5 dark:bg-black/90 dark:text-white"
       >
         {children}
       </PopoverPanel>

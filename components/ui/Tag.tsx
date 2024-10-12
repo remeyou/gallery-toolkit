@@ -11,7 +11,7 @@ export default function Tag({ children, className }: Props) {
   return (
     <span
       className={cc(
-        'inline-block rounded-sm bg-black/10 px-2 dark:bg-white/10',
+        'inline-block break-all rounded-sm bg-black/10 px-2 dark:bg-white/10',
         className,
       )}
     >

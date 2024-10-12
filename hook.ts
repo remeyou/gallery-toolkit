@@ -22,7 +22,7 @@ const baseStyle = {
   top: '8px',
   right: '8px',
   padding: '4px 6px',
-  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  backgroundColor: 'rgba(0, 0, 0, 0.2)',
   borderRadius: '25%',
   opacity: 0,
   cursor: 'pointer',

@@ -58,8 +58,7 @@ export const sendMessage = async <T = unknown, R = unknown>(
         right: '32px',
         border: '1px solid red',
         padding: '16px',
-        backgroundColor: 'lightgray',
-        color: 'black',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
       })
       .text(String(err))
       .appendTo(document.body)
