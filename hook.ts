@@ -2,9 +2,9 @@ import $ from 'jquery'
 import { useEffect } from 'react'
 import { ClickBehavior, ORIGINS, RequestPath } from '~constants'
 import type { FieldData } from '~pages/Settings'
-import { sendMessage, stringifyElement } from '~utils'
+import { formatElement, sendMessage } from '~utils'
 
-const collect = (elementSelector: string): Promise<JQuery<Element>> => {
+const collect = (elementSelector: string): Promise<JQuery<HTMLElement>> => {
   const els = $(elementSelector)
   if (!els?.length) {
     return new Promise((resolve) => {
@@ -28,7 +28,7 @@ const baseStyle = {
   cursor: 'pointer',
 }
 
-const modify = (els: JQuery<Element>, options: FieldData) => {
+const modify = (els: JQuery<HTMLElement>, options: FieldData) => {
   els.each((i, el) => {
     const $el = $(el)
 
@@ -36,9 +36,9 @@ const modify = (els: JQuery<Element>, options: FieldData) => {
       $el.removeClass('javascript-hide')
     }
 
-    const elInfo = stringifyElement(el)
+    const elInfo = formatElement(el)
     const onInspectBtnClick = (
-      e: JQuery.ClickEvent<Element, undefined, Element, Element>,
+      e: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>,
     ) => {
       e.preventDefault()
       e.stopPropagation()
@@ -52,7 +52,7 @@ const modify = (els: JQuery<Element>, options: FieldData) => {
       .text('🔍')
       .on('click', onInspectBtnClick)
     const onDownloadBtnClick = (
-      e: JQuery.ClickEvent<Element, undefined, Element, Element>,
+      e: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>,
     ) => {
       e.preventDefault()
       e.stopPropagation()
@@ -88,6 +88,8 @@ const modify = (els: JQuery<Element>, options: FieldData) => {
       case ClickBehavior.Download:
         $el.off('click').on('click', onDownloadBtnClick)
         break
+      default:
+        $el.off('click')
     }
   })
 }
@@ -95,10 +97,10 @@ const modify = (els: JQuery<Element>, options: FieldData) => {
 export const useContentScript = (options: FieldData) => {
   const exec = async () => {
     switch (location.origin) {
-      case ORIGINS.localhost:
+      case ORIGINS['Localhost']:
         modify(await collect('.ant-card'), options)
         break
-      case ORIGINS.yandere:
+      case ORIGINS['Yandere']:
         modify(await collect('#post-list-posts > li'), options)
         break
     }

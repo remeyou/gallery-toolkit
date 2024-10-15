@@ -3,10 +3,10 @@ import Hint from '~components/Hint'
 import SaveBtn from '~components/SaveBtn'
 import { H1 } from '~components/ui/Typography'
 import { LoadStatus, RequestPath, ResponseCode } from '~constants'
-import type { ReqParams, ReqResponse, StringifyElement } from '~typings'
+import type { FormattedElement, ReqParams, ReqResponse } from '~typings'
 import { download } from '~utils'
 
-type WallpaperInfo = Partial<{
+type Wallpaper = Partial<{
   title: string
   desc: string
   date: string
@@ -15,51 +15,50 @@ type WallpaperInfo = Partial<{
   source: string
 }>
 
-const transformInfo = (data: StringifyElement[]) => {
-  return data.reduce((prev, curr) => {
+const transform = (data: FormattedElement[]) => {
+  return data.reduce<Wallpaper>((prev, curr) => {
     const { tagName, attributes, textContent } = curr
     if (tagName === 'IMG') {
       return {
         ...prev,
-        src: attributes?.src,
-        alt: attributes?.alt,
+        src: attributes.src,
+        alt: attributes.alt,
       }
-    } else if (attributes?.class?.includes('title') && textContent?.length) {
-      return { ...prev, title: textContent[0] }
-    } else if (
-      attributes?.class?.includes('typography') &&
-      textContent?.length
-    ) {
-      return { ...prev, desc: textContent[0] }
-    } else if (tagName === 'P' && textContent?.length) {
-      return { ...prev, date: textContent[0] }
+    } else if (textContent?.length) {
+      if (attributes.class?.includes('title')) {
+        return { ...prev, title: textContent[0] }
+      } else if (attributes.class?.includes('typography')) {
+        return { ...prev, desc: textContent[0] }
+      } else if (tagName === 'P') {
+        return { ...prev, date: textContent[0] }
+      }
     }
     return prev
   }, {})
 }
 
 export default function Localhost() {
-  const [wallpaper, setWallpaper] = useState<WallpaperInfo>({})
+  const [wallpaper, setWallpaper] = useState<Wallpaper>({})
   const [loading, setLoading] = useState<LoadStatus>(LoadStatus.Init)
 
-  const onSave = (param: WallpaperInfo) => {
+  const onSave = (param: Wallpaper) => {
     setLoading(LoadStatus.Loading)
     const url = new URL(param.source ?? '')
     const filename =
       param.title ||
       param.alt ||
       url.hostname + url.pathname.replaceAll('/', '_') + '_' + Date.now()
-    download(param.src, filename).then(setLoading).catch(setLoading)
+    download(param.src, filename).then(setLoading)
   }
 
   useEffect(() => {
     chrome.runtime.onMessage.addListener(
       (
-        msg: ReqParams<StringifyElement[]>,
+        msg: ReqParams<FormattedElement[]>,
         sender,
         sendResp: (response: ReqResponse) => void,
       ) => {
-        const result = { ...transformInfo(msg.body ?? []), source: sender.url }
+        const result = { ...transform(msg.body ?? []), source: sender.url }
         setLoading(LoadStatus.Init)
         setWallpaper(result)
         if (msg.path === RequestPath.DownloadArt) {

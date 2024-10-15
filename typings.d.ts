@@ -1,8 +1,8 @@
-export type StringifyElement = Partial<{
+export type FormattedElement = {
   tagName: string
   attributes: Record<string, string | undefined>
-  textContent: string[]
-}>
+  textContent?: string[]
+}
 
 export interface ReqParams<T = null> {
   path: string

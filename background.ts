@@ -1,9 +1,10 @@
 import { ORIGINS } from '~constants'
+import { includes } from '~utils'
 
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-  const url = new URL(tab.url ?? ORIGINS.localhost)
+  const url = new URL(tab.url ?? ORIGINS['Localhost'])
   // Enables the side panel
-  if (Object.values(ORIGINS).includes(url.origin)) {
+  if (includes(Object.values(ORIGINS), url.origin)) {
     await chrome.sidePanel.setOptions({
       tabId,
       path: 'sidepanel.html',
