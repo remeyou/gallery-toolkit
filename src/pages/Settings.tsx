@@ -41,7 +41,7 @@ export default function Settings({ origin }: Props) {
           }))}
         />
       </Field>
-      {origin === ORIGINS['Yandere'] && (
+      {origin === ORIGINS.Yandere && (
         <Field label="Hidden posts">
           <RadioGroup
             value={formValues.showAllPosts}

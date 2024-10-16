@@ -97,10 +97,10 @@ const modify = (els: JQuery<HTMLElement>, options: FieldData) => {
 export const useContentScript = (options: FieldData) => {
   const exec = async () => {
     switch (location.origin) {
-      case ORIGINS['Localhost']:
+      case ORIGINS.Localhost:
         modify(await collect('.ant-card'), options)
         break
-      case ORIGINS['Yandere']:
+      case ORIGINS.Yandere:
         modify(await collect('#post-list-posts > li'), options)
         break
     }

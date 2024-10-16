@@ -8,14 +8,13 @@ import Localhost from '~pages/Localhost'
 import Settings from '~pages/Settings'
 import Yandere from '~pages/Yandere'
 import '~style.css'
-console.log('🚀 ~ ORIGINS:', ORIGINS)
 
 function IndexSidePanel() {
   const [origin, setOrigin] = useState('')
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tab) => {
       const url = tab[0].url
-      url ? setOrigin(new URL(url).origin) : setOrigin(ORIGINS['Localhost'])
+      url ? setOrigin(new URL(url).origin) : setOrigin(ORIGINS.Localhost)
     })
   }, [])
 
@@ -34,8 +33,8 @@ function IndexSidePanel() {
           <Settings origin={origin} />
         </Popover>
       </div>
-      {origin === ORIGINS['Localhost'] && <Localhost />}
-      {origin === ORIGINS['Yandere'] && <Yandere />}
+      {origin === ORIGINS.Localhost && <Localhost />}
+      {origin === ORIGINS.Yandere && <Yandere />}
     </Layout>
   )
 }
