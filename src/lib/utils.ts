@@ -6,7 +6,7 @@ import { LoadStatus, ResponseCode } from '~constants'
 import type { FormattedElement, ReqParams, ReqResponse } from '~typings'
 
 /** Combine Class */
-export function cc(...inputs: ClassValue[]) {
+export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 

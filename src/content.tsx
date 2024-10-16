@@ -1,10 +1,10 @@
 import { useStorage } from '@plasmohq/storage/hook'
-import cssText from 'data-text:~style.css'
+import cssText from 'data-text:~globals.css'
 import type { PlasmoCSConfig } from 'plasmo'
-import Layout from '~components/ui/Layout'
+import { ThemeProvider } from '~components/theme-provider'
 import { ClickBehavior, ORIGINS, StorageKey, Truthy } from '~constants'
 import { type FieldData } from '~pages/Settings'
-import { useContentScript } from './hook'
+import { useContentScript } from './hooks/content'
 
 const matches = Object.values(ORIGINS).map((s) => s + '/*')
 export const config: PlasmoCSConfig = {
@@ -29,7 +29,11 @@ const PlasmoOverlay = () => {
 
   useContentScript(formValues)
 
-  return <Layout></Layout>
+  return (
+    <ThemeProvider>
+      <div></div>
+    </ThemeProvider>
+  )
 }
 
 export default PlasmoOverlay

@@ -1,5 +1,5 @@
 import { ORIGINS } from '~constants'
-import { includes } from '~utils'
+import { includes } from '~lib/utils'
 
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
   const url = new URL(tab.url ?? ORIGINS.Localhost)

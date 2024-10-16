@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import Hint from '~components/Hint'
 import SaveBtn from '~components/SaveBtn'
-import Tag from '~components/ui/Tag'
-import { H1, Text } from '~components/ui/Typography'
+import Tag from '~components/custom/Tag'
+import { H1, Text } from '~components/custom/Typography'
 import { LoadStatus, RequestPath, ResponseCode } from '~constants'
+import { download } from '~lib/utils'
 import type { FormattedElement, ReqParams, ReqResponse } from '~typings'
-import { download } from '~utils'
 
 type Post = Partial<{
   preview: string

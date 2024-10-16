@@ -1,8 +1,8 @@
 import $ from 'jquery'
 import { useEffect } from 'react'
 import { ClickBehavior, ORIGINS, RequestPath } from '~constants'
+import { formatElement, sendMessage } from '~lib/utils'
 import type { FieldData } from '~pages/Settings'
-import { formatElement, sendMessage } from '~utils'
 
 const collect = (elementSelector: string): Promise<JQuery<HTMLElement>> => {
   const els = $(elementSelector)

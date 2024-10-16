@@ -1,7 +1,7 @@
 import { useStorage } from '@plasmohq/storage/hook'
-import Field from '~components/ui/Field'
-import Fieldset from '~components/ui/Fieldset'
-import RadioGroup from '~components/ui/RadioGroup'
+import Field from '~components/custom/Field'
+import Fieldset from '~components/custom/Fieldset'
+import RadioGroup from '~components/custom/RadioGroup'
 import { ClickBehavior, ORIGINS, StorageKey, Truthy } from '~constants'
 
 export type FieldData = {

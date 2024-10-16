@@ -27,6 +27,7 @@ export const enum Truthy {
 
 export const enum StorageKey {
   OptionsFormData = 'optionsFormData',
+  UiTheme = 'uiTheme',
 }
 
 export const enum LoadStatus {

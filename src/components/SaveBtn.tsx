@@ -1,7 +1,7 @@
-import { CircleCheck, CircleX, ImageDown, LoaderCircle } from "lucide-react"
-import React from "react"
-import { LoadStatus } from "~constants"
-import Button from "./ui/Button"
+import { CircleCheck, CircleX, ImageDown, LoaderCircle } from 'lucide-react'
+import React from 'react'
+import { LoadStatus } from '~constants'
+import Button from './custom/Button'
 
 type Props = {
   onClick: React.MouseEventHandler<HTMLButtonElement>

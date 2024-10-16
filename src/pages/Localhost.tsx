@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import Hint from '~components/Hint'
 import SaveBtn from '~components/SaveBtn'
-import { H1 } from '~components/ui/Typography'
+import { H1 } from '~components/custom/Typography'
 import { LoadStatus, RequestPath, ResponseCode } from '~constants'
+import { download } from '~lib/utils'
 import type { FormattedElement, ReqParams, ReqResponse } from '~typings'
-import { download } from '~utils'
 
 type Wallpaper = Partial<{
   title: string
