@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import Hint from '~components/Hint'
-import SaveBtn from '~components/SaveBtn'
-import Tag from '~components/custom/Tag'
-import { H1, Text } from '~components/custom/Typography'
+import Hint from '~components/custom/hint'
+import SaveBtn from '~components/custom/save-btn'
+import { H4, Muted } from '~components/custom/typographyA'
+import { Badge } from '~components/ui/badge'
 import { LoadStatus, RequestPath, ResponseCode } from '~constants'
 import { download } from '~lib/utils'
 import type { FormattedElement, ReqParams, ReqResponse } from '~typings'
@@ -118,36 +118,36 @@ export default function Yandere() {
   return (
     <div className="flex flex-col items-start gap-1">
       {preview && <img src={preview} alt={thumbPath} width="100%" />}
-      {thumbPath && <H1>{thumbPath}</H1>}
+      {thumbPath && <H4>{thumbPath}</H4>}
       {resolution && (
         <div className="space-x-2">
-          <Text type="secondary">Resolution:</Text>
+          <Muted>Resolution:</Muted>
           <span>{resolution}</span>
         </div>
       )}
       {rating && (
         <div className="space-x-2">
-          <Text type="secondary">Rating:</Text>
-          <Tag>{rating}</Tag>
+          <Muted>Rating:</Muted>
+          <Badge>{rating}</Badge>
         </div>
       )}
       {!Number.isNaN(score) && (
         <div className="space-x-2">
-          <Text type="secondary">Score:</Text>
+          <Muted>Score:</Muted>
           <span>{score}</span>
         </div>
       )}
       {tags && (
         <div className="space-x-2 space-y-2">
-          <Text type="secondary">Tags:</Text>
+          <Muted>Tags:</Muted>
           {tags.map((tag) => (
-            <Tag key={tag}>{tag}</Tag>
+            <Badge key={tag}>{tag}</Badge>
           ))}
         </div>
       )}
       {user && (
         <div className="space-x-2">
-          <Text type="secondary">User:</Text>
+          <Muted>User:</Muted>
           <span>{user}</span>
         </div>
       )}

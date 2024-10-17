@@ -1,20 +1,20 @@
 import { Settings as SettingsIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import Greeting from '~components/custom/Greeting'
-import Popover from '~components/custom/Popover'
+import Greeting from '~components/custom/greetingA'
 import { ThemeProvider } from '~components/theme-provider'
-import { ORIGINS } from '~constants'
+import { Popover, PopoverContent, PopoverTrigger } from '~components/ui/popover'
+import { Origins } from '~constants'
 import '~globals.css'
-import Localhost from '~pages/Localhost'
-import Settings from '~pages/Settings'
-import Yandere from '~pages/Yandere'
+import Localhost from '~pages/localhostA'
+import Settings from '~pages/settingsA'
+import Yandere from '~pages/yandereA'
 
 function IndexSidePanel() {
   const [origin, setOrigin] = useState('')
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tab) => {
       const url = tab[0].url
-      url ? setOrigin(new URL(url).origin) : setOrigin(ORIGINS.Localhost)
+      url ? setOrigin(new URL(url).origin) : setOrigin(Origins.Localhost)
     })
   }, [])
 
@@ -23,19 +23,18 @@ function IndexSidePanel() {
       <div className="min-h-screen space-y-2 p-3 text-base">
         <div className="flex items-center justify-between">
           <Greeting />
-          <Popover
-            anchor="bottom end"
-            trigger={
+          <Popover>
+            <PopoverTrigger>
               <div className="rounded-full p-2 transition-colors ease-in-out hover:bg-black/5 dark:hover:bg-white/5">
                 <SettingsIcon />
               </div>
-            }
-          >
+            </PopoverTrigger>
+            <PopoverContent></PopoverContent>
             <Settings origin={origin} />
           </Popover>
         </div>
-        {origin === ORIGINS.Localhost && <Localhost />}
-        {origin === ORIGINS.Yandere && <Yandere />}
+        {origin === Origins.Localhost && <Localhost />}
+        {origin === Origins.Yandere && <Yandere />}
       </div>
     </ThemeProvider>
   )

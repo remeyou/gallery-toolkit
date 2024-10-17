@@ -1,7 +1,7 @@
 import { CircleCheck, CircleX, ImageDown, LoaderCircle } from 'lucide-react'
 import React from 'react'
 import { LoadStatus } from '~constants'
-import Button from './custom/Button'
+import { Button } from '../ui/buttonA'
 
 type Props = {
   onClick: React.MouseEventHandler<HTMLButtonElement>
@@ -12,8 +12,8 @@ export default function SaveBtn({ onClick, status }: Props) {
   switch (status) {
     case LoadStatus.Loading:
       return (
-        <Button>
-          <LoaderCircle className="h-5 w-5 animate-spin" />
+        <Button disabled>
+          <LoaderCircle className="animate-spin" />
           <span>Saving</span>
         </Button>
       )
@@ -21,7 +21,7 @@ export default function SaveBtn({ onClick, status }: Props) {
     case LoadStatus.Success:
       return (
         <Button onClick={onClick}>
-          <CircleCheck className="h-5 w-5" />
+          <CircleCheck />
           <span>Success</span>
         </Button>
       )
@@ -29,7 +29,7 @@ export default function SaveBtn({ onClick, status }: Props) {
     case LoadStatus.Error:
       return (
         <Button onClick={onClick}>
-          <CircleX className="h-5 w-5" />
+          <CircleX />
           <span>Retry</span>
         </Button>
       )
@@ -37,7 +37,7 @@ export default function SaveBtn({ onClick, status }: Props) {
     default:
       return (
         <Button onClick={onClick}>
-          <ImageDown className="h-5 w-5" />
+          <ImageDown />
           <span>Save</span>
         </Button>
       )

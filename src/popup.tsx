@@ -1,4 +1,4 @@
-import { H1 } from '~components/custom/Typography'
+import { H3, P } from '~components/custom/typographyA'
 import { ThemeProvider } from '~components/theme-provider'
 import '~globals.css'
 
@@ -6,8 +6,8 @@ function IndexPopup() {
   return (
     <ThemeProvider>
       <div className="w-96 p-4 text-base">
-        <H1>Oops!</H1>
-        <p>The extension has not supported this website.</p>
+        <H3>Oops!</H3>
+        <P>The extension has not supported this website.</P>
       </div>
     </ThemeProvider>
   )

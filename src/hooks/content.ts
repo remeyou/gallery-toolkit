@@ -1,8 +1,8 @@
 import $ from 'jquery'
 import { useEffect } from 'react'
-import { ClickBehavior, ORIGINS, RequestPath } from '~constants'
+import { ClickBehavior, Origins, RequestPath } from '~constants'
 import { formatElement, sendMessage } from '~lib/utils'
-import type { FieldData } from '~pages/Settings'
+import type { FieldData } from '~pages/settingsA'
 
 const collect = (elementSelector: string): Promise<JQuery<HTMLElement>> => {
   const els = $(elementSelector)
@@ -97,10 +97,10 @@ const modify = (els: JQuery<HTMLElement>, options: FieldData) => {
 export const useContentScript = (options: FieldData) => {
   const exec = async () => {
     switch (location.origin) {
-      case ORIGINS.Localhost:
+      case Origins.Localhost:
         modify(await collect('.ant-card'), options)
         break
-      case ORIGINS.Yandere:
+      case Origins.Yandere:
         modify(await collect('#post-list-posts > li'), options)
         break
     }

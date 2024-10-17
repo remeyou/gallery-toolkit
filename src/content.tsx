@@ -2,11 +2,11 @@ import { useStorage } from '@plasmohq/storage/hook'
 import cssText from 'data-text:~globals.css'
 import type { PlasmoCSConfig } from 'plasmo'
 import { ThemeProvider } from '~components/theme-provider'
-import { ClickBehavior, ORIGINS, StorageKey, Truthy } from '~constants'
-import { type FieldData } from '~pages/Settings'
+import { ClickBehavior, Origins, StorageKey, Truthy } from '~constants'
+import { type FieldData } from '~pages/settingsA'
 import { useContentScript } from './hooks/content'
 
-const matches = Object.values(ORIGINS).map((s) => s + '/*')
+const matches = Object.values(Origins).map((s) => s + '/*')
 export const config: PlasmoCSConfig = {
   matches,
 }

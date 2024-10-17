@@ -1,5 +1,5 @@
 /** The origins what extension available */
-export enum ORIGINS {
+export enum Origins {
   Localhost = 'http://localhost:8000',
   Yandere = 'https://yande.re',
 }

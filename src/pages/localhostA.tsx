@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import Hint from '~components/Hint'
-import SaveBtn from '~components/SaveBtn'
-import { H1 } from '~components/custom/Typography'
+import Hint from '~components/custom/hint'
+import SaveBtn from '~components/custom/save-btn'
+import { H4, Muted } from '~components/custom/typographyA'
 import { LoadStatus, RequestPath, ResponseCode } from '~constants'
 import { download } from '~lib/utils'
 import type { FormattedElement, ReqParams, ReqResponse } from '~typings'
@@ -76,10 +76,12 @@ export default function Localhost() {
   return (
     <div className="flex flex-col items-start gap-1">
       {src && <img width="100%" src={src} alt={alt} />}
-      {title && <H1>{title}</H1>}
+      {title && <H4>{title}</H4>}
       {desc && <p>{desc}</p>}
       {date && (
-        <p className="text-sm text-black/50 dark:text-white/50">{date}</p>
+        <p>
+          <Muted>{date}</Muted>
+        </p>
       )}
       {src && <SaveBtn status={loading} onClick={() => onSave(wallpaper)} />}
     </div>
