@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Hint from '~components/custom/hint'
 import SaveBtn from '~components/custom/save-btn'
-import { H4, Muted } from '~components/custom/typographyA'
+import { H4, Muted } from '~components/custom/typography'
 import { LoadStatus, RequestPath, ResponseCode } from '~constants'
 import { download } from '~lib/utils'
 import type { FormattedElement, ReqParams, ReqResponse } from '~typings'

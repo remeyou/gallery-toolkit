@@ -3,7 +3,7 @@ import cssText from 'data-text:~globals.css'
 import type { PlasmoCSConfig } from 'plasmo'
 import { ThemeProvider } from '~components/theme-provider'
 import { ClickBehavior, Origins, StorageKey, Truthy } from '~constants'
-import { type FieldData } from '~pages/settingsA'
+import { type FieldData } from '~pages/settings'
 import { useContentScript } from './hooks/content'
 
 const matches = Object.values(Origins).map((s) => s + '/*')

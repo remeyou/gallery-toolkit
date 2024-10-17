@@ -2,7 +2,7 @@ import $ from 'jquery'
 import { useEffect } from 'react'
 import { ClickBehavior, Origins, RequestPath } from '~constants'
 import { formatElement, sendMessage } from '~lib/utils'
-import type { FieldData } from '~pages/settingsA'
+import type { FieldData } from '~pages/settings'
 
 const collect = (elementSelector: string): Promise<JQuery<HTMLElement>> => {
   const els = $(elementSelector)

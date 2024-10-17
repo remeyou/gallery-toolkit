@@ -1,4 +1,4 @@
-import { H3, P } from '~components/custom/typographyA'
+import { H3, P } from '~components/custom/typography'
 import { ThemeProvider } from '~components/theme-provider'
 import '~globals.css'
 

@@ -1,5 +1,5 @@
 import { Moon, Sun, Sunrise, Sunset } from 'lucide-react'
-import { H3 } from './typographyA'
+import { H3 } from './typography'
 
 const titleClass = 'flex items-center gap-1'
 

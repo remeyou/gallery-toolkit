@@ -1,6 +1,6 @@
 import { useStorage } from '@plasmohq/storage/hook'
 import { useForm } from 'react-hook-form'
-import { H4 } from '~components/custom/typographyA'
+import { H4 } from '~components/custom/typography'
 import {
   Form,
   FormControl,

@@ -1,13 +1,13 @@
 import { Settings as SettingsIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import Greeting from '~components/custom/greetingA'
+import Greeting from '~components/custom/greeting'
 import { ThemeProvider } from '~components/theme-provider'
 import { Popover, PopoverContent, PopoverTrigger } from '~components/ui/popover'
 import { Origins } from '~constants'
 import '~globals.css'
-import Localhost from '~pages/localhostA'
-import Settings from '~pages/settingsA'
-import Yandere from '~pages/yandereA'
+import Localhost from '~pages/localhost'
+import Settings from '~pages/settings'
+import Yandere from '~pages/yandere'
 
 function IndexSidePanel() {
   const [origin, setOrigin] = useState('')

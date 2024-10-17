@@ -1,4 +1,4 @@
-import { P } from './typographyA'
+import { P } from './typography'
 
 export default function Hint() {
   return (
