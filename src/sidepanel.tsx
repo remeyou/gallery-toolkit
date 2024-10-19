@@ -29,8 +29,9 @@ function IndexSidePanel() {
                 <SettingsIcon />
               </div>
             </PopoverTrigger>
-            <PopoverContent></PopoverContent>
-            <Settings origin={origin} />
+            <PopoverContent>
+              <Settings origin={origin} />
+            </PopoverContent>
           </Popover>
         </div>
         {origin === Origins.Localhost && <Localhost />}

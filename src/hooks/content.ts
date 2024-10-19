@@ -2,7 +2,7 @@ import $ from 'jquery'
 import { useEffect } from 'react'
 import { ClickBehavior, Origins, RequestPath } from '~constants'
 import { formatElement, sendMessage } from '~lib/utils'
-import type { FieldData } from '~pages/settings'
+import type { FormSchema } from '~pages/settings'
 
 const collect = (elementSelector: string): Promise<JQuery<HTMLElement>> => {
   const els = $(elementSelector)
@@ -28,7 +28,7 @@ const baseStyle = {
   cursor: 'pointer',
 }
 
-const modify = (els: JQuery<HTMLElement>, options: FieldData) => {
+const modify = (els: JQuery<HTMLElement>, options: FormSchema) => {
   els.each((i, el) => {
     const $el = $(el)
 
@@ -94,7 +94,7 @@ const modify = (els: JQuery<HTMLElement>, options: FieldData) => {
   })
 }
 
-export const useContentScript = (options: FieldData) => {
+export const useContentScript = (options: FormSchema) => {
   const exec = async () => {
     switch (location.origin) {
       case Origins.Localhost:

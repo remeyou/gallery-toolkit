@@ -128,7 +128,7 @@ export default function Yandere() {
       {rating && (
         <div className="space-x-2">
           <Muted>Rating:</Muted>
-          <Badge>{rating}</Badge>
+          <Badge variant="secondary">{rating}</Badge>
         </div>
       )}
       {!Number.isNaN(score) && (
@@ -141,7 +141,9 @@ export default function Yandere() {
         <div className="space-x-2 space-y-2">
           <Muted>Tags:</Muted>
           {tags.map((tag) => (
-            <Badge key={tag}>{tag}</Badge>
+            <Badge variant="secondary" key={tag}>
+              {tag}
+            </Badge>
           ))}
         </div>
       )}

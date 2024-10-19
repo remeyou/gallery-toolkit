@@ -3,7 +3,7 @@ import cssText from 'data-text:~globals.css'
 import type { PlasmoCSConfig } from 'plasmo'
 import { ThemeProvider } from '~components/theme-provider'
 import { ClickBehavior, Origins, StorageKey, Truthy } from '~constants'
-import { type FieldData } from '~pages/settings'
+import { type FormSchema } from '~pages/settings'
 import { useContentScript } from './hooks/content'
 
 const matches = Object.values(Origins).map((s) => s + '/*')
@@ -22,7 +22,7 @@ const PlasmoOverlay = () => {
     return null
   }
 
-  const [formValues] = useStorage<FieldData>(StorageKey.OptionsFormData, {
+  const [formValues] = useStorage<FormSchema>(StorageKey.OptionsFormData, {
     clickBehavior: ClickBehavior.Default,
     showAllPosts: Truthy.False,
   })

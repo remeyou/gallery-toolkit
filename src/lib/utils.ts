@@ -36,6 +36,25 @@ export const formatElement = (el: Element): FormattedElement[] => {
   return list
 }
 
+function toast(content: string) {
+  const $toast = $('<div>')
+    .css({
+      position: 'fixed',
+      top: '32px',
+      right: '32px',
+      border: '1px solid red',
+      padding: '16px',
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    })
+    .text(content)
+    .appendTo(document.body)
+  setTimeout(() => {
+    $toast.fadeOut('slow', () => {
+      $toast.remove()
+    })
+  }, 3000)
+}
+
 export const sendMessage = async <T = unknown, R = unknown>(
   msg: ReqParams<T>,
 ): Promise<ReqResponse<R> | undefined> => {
@@ -51,22 +70,7 @@ export const sendMessage = async <T = unknown, R = unknown>(
     })
   } catch (error) {
     console.error('sendMessage error: ', error)
-    const toast = $('<div>')
-      .css({
-        position: 'fixed',
-        top: '32px',
-        right: '32px',
-        border: '1px solid red',
-        padding: '16px',
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-      })
-      .text(typeof error === 'string' ? error : JSON.stringify(error, null, 2))
-      .appendTo(document.body)
-    setTimeout(() => {
-      toast.fadeOut('slow', () => {
-        toast.remove()
-      })
-    }, 3000)
+    toast(typeof error === 'string' ? error : JSON.stringify(error, null, 2))
   }
 }
 
