@@ -30,6 +30,7 @@ export default function Settings({ origin }: Props) {
             clickBehavior: v as ClickBehavior,
           })
         }}
+        label="Click card behavior"
         options={Object.values(ClickBehavior).map((s) => ({
           label: s,
           value: s,
