@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { saveAs } from 'file-saver'
 import $ from 'jquery'
 import { twMerge } from 'tailwind-merge'
-import { LoadStatus, ResponseCode } from '~constants'
+import { LoadStatus, Origins, ResponseCode } from '~constants'
 import type { FormattedElement, ReqParams, ReqResponse } from '~typings'
 
 /** Combine Class */
@@ -96,4 +96,14 @@ export const includes = <T = unknown>(
   element: any,
 ): element is T => {
   return array.includes(element)
+}
+
+export function getLocation(tab: chrome.tabs.Tab) {
+  if (tab.url) {
+    return new URL(tab.url)
+  }
+  if (process.env.NODE_ENV === 'development') {
+    return new URL(Origins.Localhost)
+  }
+  return location
 }

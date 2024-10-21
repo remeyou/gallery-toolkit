@@ -43,7 +43,7 @@ const modify = (els: JQuery<HTMLElement>, options: FormSchema) => {
       e.preventDefault()
       e.stopPropagation()
       sendMessage({
-        path: RequestPath.InspectArt,
+        path: RequestPath.Inspect,
         body: elInfo,
       })
     }
@@ -57,7 +57,7 @@ const modify = (els: JQuery<HTMLElement>, options: FormSchema) => {
       e.preventDefault()
       e.stopPropagation()
       sendMessage({
-        path: RequestPath.DownloadArt,
+        path: RequestPath.Download,
         body: elInfo,
       })
     }

@@ -61,7 +61,7 @@ export default function Localhost() {
         const result = { ...transform(msg.body ?? []), source: sender.url }
         setLoading(LoadStatus.Init)
         setWallpaper(result)
-        if (msg.path === RequestPath.DownloadArt) {
+        if (msg.path === RequestPath.Download) {
           onSave(result)
         }
         sendResp({ code: ResponseCode.OK })

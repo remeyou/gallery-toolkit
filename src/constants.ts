@@ -5,19 +5,19 @@ export enum Origins {
 }
 
 export const enum ResponseCode {
-  OK = 200,
-  Error = 500,
+  Error,
+  OK,
 }
 
 export const enum RequestPath {
-  DownloadArt = '/downloadArt',
-  InspectArt = '/inspectArt',
+  Inspect = '/inspect',
+  Download = '/download',
 }
 
 export enum ClickBehavior {
-  Default = 'Default',
-  Inspect = 'Inspect',
-  Download = 'Download',
+  Default = 'default',
+  Inspect = 'inspect',
+  Download = 'download',
 }
 
 export const enum Truthy {
@@ -27,7 +27,7 @@ export const enum Truthy {
 
 export const enum StorageKey {
   OptionsFormData = 'optionsFormData',
-  UiTheme = 'uiTheme',
+  UITheme = 'UITheme',
 }
 
 export const enum LoadStatus {

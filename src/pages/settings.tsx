@@ -31,9 +31,9 @@ export default function Settings({ origin }: Props) {
           })
         }}
         label="Click card behavior"
-        options={Object.values(ClickBehavior).map((s) => ({
-          label: s,
-          value: s,
+        options={Object.entries(ClickBehavior).map(([label, value]) => ({
+          label,
+          value,
         }))}
       />
       {origin === Origins.Yandere && (
