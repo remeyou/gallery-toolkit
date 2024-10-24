@@ -67,6 +67,7 @@ export default function Localhost() {
         sendResp({ code: ResponseCode.OK })
       },
     )
+    return () => chrome.runtime.onMessage.removeListener(() => null)
   }, [])
 
   if (!Object.keys(wallpaper).length) {

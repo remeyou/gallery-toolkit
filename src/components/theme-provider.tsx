@@ -25,7 +25,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
-  storageKey = StorageKey.UITheme,
+  storageKey = StorageKey.Theme,
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useStorage<Theme>(storageKey, defaultTheme)

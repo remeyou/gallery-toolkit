@@ -12,7 +12,7 @@ type Props = { origin: string }
 
 export default function Settings({ origin }: Props) {
   const [formValues, setFormValues] = useStorage<FormSchema>(
-    StorageKey.OptionsFormData,
+    StorageKey.Settings,
     {
       clickBehavior: ClickBehavior.Default,
       showAllPosts: Truthy.False,
@@ -24,10 +24,10 @@ export default function Settings({ origin }: Props) {
       <H4>Settings</H4>
       <LabelRadioGroup
         value={formValues.clickBehavior}
-        onChange={(v) => {
+        onChange={(clickBehavior) => {
           setFormValues({
             ...formValues,
-            clickBehavior: v as ClickBehavior,
+            clickBehavior,
           })
         }}
         label="Click card behavior"

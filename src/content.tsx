@@ -22,7 +22,7 @@ const PlasmoOverlay = () => {
     return null
   }
 
-  const [formValues] = useStorage<FormSchema>(StorageKey.OptionsFormData, {
+  const [formValues] = useStorage<FormSchema>(StorageKey.Settings, {
     clickBehavior: ClickBehavior.Default,
     showAllPosts: Truthy.False,
   })

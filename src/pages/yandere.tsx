@@ -100,6 +100,7 @@ export default function Yandere() {
         sendResp({ code: ResponseCode.OK })
       },
     )
+    return () => chrome.runtime.onMessage.removeListener(() => null)
   }, [])
 
   if (!Object.keys(post).length) {
