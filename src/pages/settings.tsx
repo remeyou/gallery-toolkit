@@ -1,11 +1,16 @@
 import { useStorage } from '@plasmohq/storage/hook'
 import LabelRadioGroup from '~components/custom/label-radio-group'
+import LabelSlider from '~components/custom/label-slider'
+import LabelSwitch from '~components/custom/label-switch'
 import { H4 } from '~components/custom/typography'
-import { ClickBehavior, Origins, StorageKey, Truthy } from '~constants'
+import { ClickBehavior, Origins, StorageKey } from '~constants'
 
 export type FormSchema = {
   clickBehavior: ClickBehavior
-  showAllPosts: Truthy
+  showAllPosts: boolean
+  showToolbar: boolean
+  zoomCard: boolean
+  zoomLevel: number
 }
 
 type Props = { origin: string }
@@ -15,15 +20,20 @@ export default function Settings({ origin }: Props) {
     StorageKey.Settings,
     {
       clickBehavior: ClickBehavior.Default,
-      showAllPosts: Truthy.False,
+      showAllPosts: false,
+      showToolbar: true,
+      zoomCard: false,
+      zoomLevel: 105,
     },
   )
 
+  const { clickBehavior, showAllPosts, showToolbar, zoomCard, zoomLevel } =
+    formValues
   return (
     <div className="space-y-4">
       <H4>Settings</H4>
       <LabelRadioGroup
-        value={formValues.clickBehavior}
+        value={clickBehavior}
         onChange={(clickBehavior) => {
           setFormValues({
             ...formValues,
@@ -37,19 +47,44 @@ export default function Settings({ origin }: Props) {
         }))}
       />
       {origin === Origins.Yandere && (
-        <LabelRadioGroup
-          value={String(formValues.showAllPosts)}
-          onChange={(v) => {
+        <LabelSwitch
+          value={showAllPosts}
+          onChange={(showAllPosts) => {
             setFormValues({
               ...formValues,
-              showAllPosts: Number(v),
+              showAllPosts,
             })
           }}
-          label="Hidden posts"
-          options={[
-            { label: 'Hidden', value: String(Truthy.False) },
-            { label: 'Show all', value: String(Truthy.True) },
-          ]}
+          label="Show all posts"
+        />
+      )}
+      <LabelSwitch
+        value={showToolbar}
+        onChange={(showToolbar) => {
+          setFormValues({
+            ...formValues,
+            showToolbar,
+          })
+        }}
+        label="Show toolbar"
+      />
+      <LabelSwitch
+        value={zoomCard}
+        onChange={(zoomCard) => {
+          setFormValues({
+            ...formValues,
+            zoomCard,
+          })
+        }}
+        label="Zoom card"
+      />
+      {zoomCard && (
+        <LabelSlider
+          value={[zoomLevel]}
+          onChange={(n) => setFormValues({ ...formValues, zoomLevel: n[0] })}
+          min={105}
+          max={300}
+          label="Zoom level"
         />
       )}
     </div>

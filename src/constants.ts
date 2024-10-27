@@ -20,11 +20,6 @@ export enum ClickBehavior {
   Download = 'download',
 }
 
-export const enum Truthy {
-  False,
-  True,
-}
-
 export const enum StorageKey {
   Settings = 'settings',
   Theme = 'theme',

@@ -2,11 +2,12 @@ import type { ClassValue } from 'clsx'
 import { type ReactNode } from 'react'
 import { cn } from '~lib/utils'
 
-type HProps = {
+type TypographyProps = {
   children: ReactNode
   className?: ClassValue
 }
-export const H3 = ({ children, className }: HProps) => {
+
+export const H3 = ({ children, className }: TypographyProps) => {
   return (
     <h3
       className={cn(
@@ -18,7 +19,8 @@ export const H3 = ({ children, className }: HProps) => {
     </h3>
   )
 }
-export const H4 = ({ children, className }: HProps) => {
+
+export const H4 = ({ children, className }: TypographyProps) => {
   return (
     <h4
       className={cn(
@@ -31,11 +33,7 @@ export const H4 = ({ children, className }: HProps) => {
   )
 }
 
-type PProps = {
-  children: ReactNode
-  className?: ClassValue
-}
-export const P = ({ children, className }: PProps) => {
+export const P = ({ children, className }: TypographyProps) => {
   return (
     <p className={cn('leading-7 [&:not(:first-child)]:mt-6', className)}>
       {children}
@@ -43,11 +41,7 @@ export const P = ({ children, className }: PProps) => {
   )
 }
 
-type MutedProps = {
-  children: ReactNode
-  className?: ClassValue
-}
-export const Muted = ({ children, className }: MutedProps) => {
+export const Muted = ({ children, className }: TypographyProps) => {
   return (
     <span className={cn('text-sm text-muted-foreground', className)}>
       {children}

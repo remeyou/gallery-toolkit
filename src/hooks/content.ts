@@ -1,6 +1,7 @@
+import { useStorage } from '@plasmohq/storage/hook'
 import $ from 'jquery'
 import { useEffect } from 'react'
-import { ClickBehavior, Origins, RequestPath } from '~constants'
+import { ClickBehavior, Origins, RequestPath, StorageKey } from '~constants'
 import { formatElement, sendMessage } from '~lib/utils'
 import type { FormSchema } from '~pages/settings'
 
@@ -17,7 +18,7 @@ const collect = (elementSelector: string): Promise<JQuery<HTMLElement>> => {
   }
 }
 
-const baseStyle = {
+const btnBaseStyle = {
   position: 'absolute',
   top: '8px',
   right: '8px',
@@ -28,11 +29,11 @@ const baseStyle = {
   cursor: 'pointer',
 }
 
-const modify = (els: JQuery<HTMLElement>, options: FormSchema) => {
+const modify = (els: JQuery<HTMLElement>, settings: FormSchema) => {
   els.each((i, el) => {
     const $el = $(el)
 
-    if (options.showAllPosts && $el.is('.javascript-hide')) {
+    if (settings.showAllPosts && $el.is('.javascript-hide')) {
       $el.removeClass('javascript-hide')
     }
 
@@ -48,7 +49,7 @@ const modify = (els: JQuery<HTMLElement>, options: FormSchema) => {
       })
     }
     const $inspectBtn = $('<div>')
-      .css(baseStyle)
+      .css(btnBaseStyle)
       .text('🔍')
       .on('click', onInspectBtnClick)
     const onDownloadBtnClick = (
@@ -62,7 +63,7 @@ const modify = (els: JQuery<HTMLElement>, options: FormSchema) => {
       })
     }
     const $downloadBtn = $('<div>')
-      .css({ ...baseStyle, right: `${8 + 38 * 1}px` })
+      .css({ ...btnBaseStyle, right: `${8 + 38 * 1}px` })
       .text('💾')
       .on('click', onDownloadBtnClick)
 
@@ -71,17 +72,30 @@ const modify = (els: JQuery<HTMLElement>, options: FormSchema) => {
       .on('mouseenter', () => {
         $inspectBtn.css({ opacity: 1 })
         $downloadBtn.css({ opacity: 1 })
+        if (settings.zoomCard) {
+          $el.css({
+            'z-index': Number.MAX_SAFE_INTEGER,
+            transform: `scale(${settings.zoomLevel / 100})`,
+            transition: 'transform .25s .5s',
+          })
+        }
       })
       .off('mouseleave')
       .on('mouseleave', () => {
         $inspectBtn.css({ opacity: 0 })
         $downloadBtn.css({ opacity: 0 })
+        $el.css({
+          'z-index': 'unset',
+          transform: 'scale(1)',
+          transition: 'none',
+        })
       })
       .css({
         position: 'relative',
+        'transform-origin': 'center center',
       })
-      .append([$inspectBtn, $downloadBtn])
-    switch (options.clickBehavior) {
+      .append(settings.showToolbar ? [$inspectBtn, $downloadBtn] : [])
+    switch (settings.clickBehavior) {
       case ClickBehavior.Inspect:
         $el.off('click').on('click', onInspectBtnClick)
         break
@@ -94,19 +108,27 @@ const modify = (els: JQuery<HTMLElement>, options: FormSchema) => {
   })
 }
 
-export const useContentScript = (options: FormSchema) => {
+export const useContentScript = () => {
+  const [formValues] = useStorage<FormSchema>(StorageKey.Settings, {
+    clickBehavior: ClickBehavior.Default,
+    showAllPosts: false,
+    showToolbar: true,
+    zoomCard: false,
+    zoomLevel: 105,
+  })
+
   const exec = async () => {
     switch (location.origin) {
       case Origins.Localhost:
-        modify(await collect('.ant-card'), options)
+        modify(await collect('.ant-card'), formValues)
         break
       case Origins.Yandere:
-        modify(await collect('#post-list-posts > li'), options)
+        modify(await collect('#post-list-posts > li'), formValues)
         break
     }
   }
 
   useEffect(() => {
     exec()
-  }, [options])
+  }, [formValues])
 }

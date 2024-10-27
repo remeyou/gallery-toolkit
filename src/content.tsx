@@ -1,9 +1,7 @@
-import { useStorage } from '@plasmohq/storage/hook'
 import cssText from 'data-text:~globals.css'
 import type { PlasmoCSConfig } from 'plasmo'
 import { ThemeProvider } from '~components/theme-provider'
-import { ClickBehavior, Origins, StorageKey, Truthy } from '~constants'
-import { type FormSchema } from '~pages/settings'
+import { Origins } from '~constants'
 import { useContentScript } from './hooks/content'
 
 const matches = Object.values(Origins).map((s) => s + '/*')
@@ -22,12 +20,7 @@ const PlasmoOverlay = () => {
     return null
   }
 
-  const [formValues] = useStorage<FormSchema>(StorageKey.Settings, {
-    clickBehavior: ClickBehavior.Default,
-    showAllPosts: Truthy.False,
-  })
-
-  useContentScript(formValues)
+  useContentScript()
 
   return (
     <ThemeProvider>
