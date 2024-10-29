@@ -3,7 +3,7 @@ import Hint from '~components/custom/hint'
 import SaveBtn from '~components/custom/save-btn'
 import { H4, Muted } from '~components/custom/typography'
 import { Badge } from '~components/ui/badge'
-import { LoadStatus, RequestPath, ResponseCode } from '~constants'
+import { LoadStatus, Origins, RequestPath, ResponseCode } from '~constants'
 import { download } from '~lib/utils'
 import type { FormattedElement, ReqParams, ReqResponse } from '~typings'
 
@@ -91,6 +91,9 @@ export default function Yandere() {
         sender,
         sendResp: (response: ReqResponse) => void,
       ) => {
+        if (!sender.url?.includes(Origins.Yandere)) {
+          return
+        }
         const result = { ...transform(msg.body ?? []), source: sender.url }
         setLoading(LoadStatus.Init)
         setPost(result)

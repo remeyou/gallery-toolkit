@@ -1,7 +1,5 @@
 import { useStorage } from '@plasmohq/storage/hook'
-import { useDebouncedCallback } from 'use-debounce'
 import LabelRadioGroup from '~components/custom/label-radio-group'
-import LabelSlider from '~components/custom/label-slider'
 import LabelSwitch from '~components/custom/label-switch'
 import { H4 } from '~components/custom/typography'
 import { ClickBehavior, Origins, StorageKey } from '~constants'
@@ -11,24 +9,22 @@ export type FormSchema = {
   showAllPosts: boolean
   showToolbar: boolean
   zoomCard: boolean
-  zoomLevel: number
 }
 
 type Props = { origin: string }
 
 export default function Settings({ origin }: Props) {
-  const [formValues, setFormValues, { setRenderValue, setStoreValue }] =
-    useStorage<FormSchema>(StorageKey.Settings, {
+  const [formValues, setFormValues] = useStorage<FormSchema>(
+    StorageKey.Settings,
+    {
       clickBehavior: ClickBehavior.Default,
       showAllPosts: false,
       showToolbar: true,
       zoomCard: false,
-      zoomLevel: 105,
-    })
-  const setStorageDebounce = useDebouncedCallback(setStoreValue, 500)
+    },
+  )
 
-  const { clickBehavior, showAllPosts, showToolbar, zoomCard, zoomLevel } =
-    formValues
+  const { clickBehavior, showAllPosts, showToolbar, zoomCard } = formValues
   return (
     <div className="space-y-4">
       <H4>Settings</H4>
@@ -78,19 +74,6 @@ export default function Settings({ origin }: Props) {
         }}
         label="Zoom card"
       />
-      {zoomCard && (
-        <LabelSlider
-          value={[zoomLevel]}
-          onChange={([zoomLevel]) => {
-            const v = { ...formValues, zoomLevel }
-            setRenderValue(v)
-            setStorageDebounce(v)
-          }}
-          min={105}
-          max={300}
-          label="Zoom level"
-        />
-      )}
     </div>
   )
 }

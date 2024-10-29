@@ -29,6 +29,9 @@ const btnBaseStyle = {
   cursor: 'pointer',
 }
 
+// 2**31 - 1
+const Z_INDEX_MAX = 2147483647
+
 const modify = (els: JQuery<HTMLElement>, settings: FormSchema) => {
   els.each((i, el) => {
     const $el = $(el)
@@ -67,16 +70,37 @@ const modify = (els: JQuery<HTMLElement>, settings: FormSchema) => {
       .text('💾')
       .on('click', onDownloadBtnClick)
 
+    const originalCSS = $el.css(['position', 'z-index'])
+    const originalTransform = $el.css(['transform'])
     $el
       .off('mouseenter')
       .on('mouseenter', () => {
         $inspectBtn.css({ opacity: 1 })
         $downloadBtn.css({ opacity: 1 })
         if (settings.zoomCard) {
+          const { width, height, top, left, right } = el.getBoundingClientRect()
+          const ratio = document.documentElement.clientHeight / height
+          const scaledTopOffset = (height / 2) * (ratio - 1) - top
+          let scaledXOffset = 0
+          const scaledWidthDiff = (width / 2) * (ratio - 1)
+          if (scaledWidthDiff > left) {
+            scaledXOffset = scaledWidthDiff - left
+          } else if (
+            scaledWidthDiff - (document.documentElement.clientWidth - right) >
+            0
+          ) {
+            scaledXOffset =
+              document.documentElement.clientWidth - right - scaledWidthDiff
+          }
           $el.css({
-            'z-index': Number.MAX_SAFE_INTEGER,
-            transform: `scale(${settings.zoomLevel / 100})`,
+            position: 'relative',
+            'z-index': Z_INDEX_MAX,
+            transform: `translate(${scaledXOffset}px, ${scaledTopOffset}px) scale(${ratio})`,
             transition: 'transform .25s .5s',
+          })
+          $('#gallery-toolkit-layer').css({
+            opacity: 1,
+            transition: 'opacity .25s .5s',
           })
         }
       })
@@ -84,15 +108,19 @@ const modify = (els: JQuery<HTMLElement>, settings: FormSchema) => {
       .on('mouseleave', () => {
         $inspectBtn.css({ opacity: 0 })
         $downloadBtn.css({ opacity: 0 })
-        $el.css({
-          'z-index': 'unset',
-          transform: 'scale(1)',
-          transition: 'none',
-        })
-      })
-      .css({
-        position: 'relative',
-        'transform-origin': 'center center',
+        if (settings.zoomCard) {
+          $el.css({
+            ...originalTransform,
+            transition: 'transform .25s',
+          })
+          $('#gallery-toolkit-layer').css({
+            opacity: 0,
+            transition: 'opacity .25s',
+          })
+          setTimeout(() => {
+            $el.css(originalCSS)
+          }, 250)
+        }
       })
       .append(settings.showToolbar ? [$inspectBtn, $downloadBtn] : [])
     switch (settings.clickBehavior) {
@@ -114,7 +142,6 @@ export const useContentScript = () => {
     showAllPosts: false,
     showToolbar: true,
     zoomCard: false,
-    zoomLevel: 105,
   })
 
   const exec = async () => {
@@ -131,4 +158,25 @@ export const useContentScript = () => {
   useEffect(() => {
     exec()
   }, [formValues])
+
+  useEffect(() => {
+    const $layer = $('<div>')
+      .attr('id', 'gallery-toolkit-layer')
+      .css({
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        'z-index': Z_INDEX_MAX - 1,
+        width: '100%',
+        height: '100%',
+        'background-color': 'rgba(0,0,0,0.5)',
+        filter: 'blur(50px)',
+        opacity: 0,
+        'pointer-events': 'none',
+      })
+    $('body').prepend($layer)
+    return () => {
+      $layer.remove()
+    }
+  }, [])
 }
