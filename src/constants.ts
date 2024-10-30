@@ -31,3 +31,6 @@ export const enum LoadStatus {
   Init,
   Loading,
 }
+
+// 2**31 - 1
+export const Z_INDEX_MAX = 2147483647

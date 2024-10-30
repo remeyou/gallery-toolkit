@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { saveAs } from 'file-saver'
 import $ from 'jquery'
 import { twMerge } from 'tailwind-merge'
-import { LoadStatus, Origins, ResponseCode } from '~constants'
+import { LoadStatus, Origins, ResponseCode, Z_INDEX_MAX } from '~constants'
 import type { FormattedElement, ReqParams, ReqResponse } from '~typings'
 
 /** Combine Class */
@@ -42,6 +42,7 @@ function toast(content: string) {
       position: 'fixed',
       top: '32px',
       right: '32px',
+      zIndex: Z_INDEX_MAX,
       border: '1px solid red',
       padding: '16px',
       backgroundColor: 'rgba(0, 0, 0, 0.2)',

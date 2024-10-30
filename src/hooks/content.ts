@@ -1,9 +1,16 @@
 import { useStorage } from '@plasmohq/storage/hook'
 import $ from 'jquery'
 import { useEffect } from 'react'
-import { ClickBehavior, Origins, RequestPath, StorageKey } from '~constants'
+import {
+  ClickBehavior,
+  Origins,
+  RequestPath,
+  StorageKey,
+  Z_INDEX_MAX,
+} from '~constants'
 import { formatElement, sendMessage } from '~lib/utils'
 import type { FormSchema } from '~pages/settings'
+import type { FormattedElement } from '~typings'
 
 const collect = (elementSelector: string): Promise<JQuery<HTMLElement>> => {
   const els = $(elementSelector)
@@ -22,17 +29,27 @@ const btnBaseStyle = {
   position: 'absolute',
   top: '8px',
   right: '8px',
-  padding: '4px 6px',
-  backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  padding: '4px 4px 4px 8px',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
   borderRadius: '25%',
   opacity: 0,
   cursor: 'pointer',
 }
 
-// 2**31 - 1
-const Z_INDEX_MAX = 2147483647
+const onBtnClick = (
+  path: RequestPath,
+  body: FormattedElement[],
+  e: JQuery.ClickEvent,
+) => {
+  e.preventDefault()
+  e.stopPropagation()
+  sendMessage({
+    path,
+    body,
+  })
+}
 
-const modify = (els: JQuery<HTMLElement>, settings: FormSchema) => {
+const modify = (settings: FormSchema, els: JQuery) => {
   els.each((i, el) => {
     const $el = $(el)
 
@@ -41,37 +58,19 @@ const modify = (els: JQuery<HTMLElement>, settings: FormSchema) => {
     }
 
     const elInfo = formatElement(el)
-    const onInspectBtnClick = (
-      e: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>,
-    ) => {
-      e.preventDefault()
-      e.stopPropagation()
-      sendMessage({
-        path: RequestPath.Inspect,
-        body: elInfo,
-      })
-    }
+
     const $inspectBtn = $('<div>')
       .css(btnBaseStyle)
       .text('🔍')
-      .on('click', onInspectBtnClick)
-    const onDownloadBtnClick = (
-      e: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>,
-    ) => {
-      e.preventDefault()
-      e.stopPropagation()
-      sendMessage({
-        path: RequestPath.Download,
-        body: elInfo,
-      })
-    }
+      .on('click', onBtnClick.bind(null, RequestPath.Inspect, elInfo))
     const $downloadBtn = $('<div>')
       .css({ ...btnBaseStyle, right: `${8 + 38 * 1}px` })
       .text('💾')
-      .on('click', onDownloadBtnClick)
+      .on('click', onBtnClick.bind(null, RequestPath.Download, elInfo))
 
     const originalCSS = $el.css(['position', 'z-index'])
     const originalTransform = $el.css(['transform'])
+
     $el
       .off('mouseenter')
       .on('mouseenter', () => {
@@ -113,25 +112,25 @@ const modify = (els: JQuery<HTMLElement>, settings: FormSchema) => {
             ...originalTransform,
             transition: 'transform .25s',
           })
+          setTimeout(() => {
+            $el.css(originalCSS)
+          }, 250)
           $('#gallery-toolkit-layer').css({
             opacity: 0,
             transition: 'opacity .25s',
           })
-          setTimeout(() => {
-            $el.css(originalCSS)
-          }, 250)
         }
       })
       .append(settings.showToolbar ? [$inspectBtn, $downloadBtn] : [])
+
+    $el.off('click')
     switch (settings.clickBehavior) {
       case ClickBehavior.Inspect:
-        $el.off('click').on('click', onInspectBtnClick)
+        $el.on('click', onBtnClick.bind(null, RequestPath.Inspect, elInfo))
         break
       case ClickBehavior.Download:
-        $el.off('click').on('click', onDownloadBtnClick)
+        $el.on('click', onBtnClick.bind(null, RequestPath.Download, elInfo))
         break
-      default:
-        $el.off('click')
     }
   })
 }
@@ -144,19 +143,15 @@ export const useContentScript = () => {
     zoomCard: false,
   })
 
-  const exec = async () => {
+  useEffect(() => {
     switch (location.origin) {
       case Origins.Localhost:
-        modify(await collect('.ant-card'), formValues)
+        collect('.ant-card').then(modify.bind(null, formValues))
         break
       case Origins.Yandere:
-        modify(await collect('#post-list-posts > li'), formValues)
+        collect('#post-list-posts > li').then(modify.bind(null, formValues))
         break
     }
-  }
-
-  useEffect(() => {
-    exec()
   }, [formValues])
 
   useEffect(() => {
@@ -166,15 +161,15 @@ export const useContentScript = () => {
         position: 'fixed',
         top: 0,
         right: 0,
-        'z-index': Z_INDEX_MAX - 1,
+        zIndex: Z_INDEX_MAX - 1,
         width: '100%',
         height: '100%',
-        'background-color': 'rgba(0,0,0,0.5)',
+        backgroundColor: 'rgba(0,0,0,0.5)',
         filter: 'blur(50px)',
         opacity: 0,
-        'pointer-events': 'none',
+        pointerEvents: 'none',
       })
-    $('body').prepend($layer)
+      .prependTo(document.body)
     return () => {
       $layer.remove()
     }
