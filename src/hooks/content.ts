@@ -97,10 +97,6 @@ const modify = (settings: FormSchema, els: JQuery) => {
             transform: `translate(${scaledXOffset}px, ${scaledTopOffset}px) scale(${ratio})`,
             transition: 'transform .25s .5s',
           })
-          $('#gallery-toolkit-layer').css({
-            opacity: 1,
-            transition: 'opacity .25s .5s',
-          })
         }
       })
       .off('mouseleave')
@@ -115,10 +111,6 @@ const modify = (settings: FormSchema, els: JQuery) => {
           setTimeout(() => {
             $el.css(originalCSS)
           }, 250)
-          $('#gallery-toolkit-layer').css({
-            opacity: 0,
-            transition: 'opacity .25s',
-          })
         }
       })
       .append(settings.showToolbar ? [$inspectBtn, $downloadBtn] : [])
@@ -153,25 +145,4 @@ export const useContentScript = () => {
         break
     }
   }, [formValues])
-
-  useEffect(() => {
-    const $layer = $('<div>')
-      .attr('id', 'gallery-toolkit-layer')
-      .css({
-        position: 'fixed',
-        top: 0,
-        right: 0,
-        zIndex: Z_INDEX_MAX - 1,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        filter: 'blur(50px)',
-        opacity: 0,
-        pointerEvents: 'none',
-      })
-      .prependTo(document.body)
-    return () => {
-      $layer.remove()
-    }
-  }, [])
 }
