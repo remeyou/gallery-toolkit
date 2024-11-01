@@ -25,17 +25,6 @@ const collect = (elementSelector: string): Promise<JQuery<HTMLElement>> => {
   }
 }
 
-const btnBaseStyle = {
-  position: 'absolute',
-  top: '8px',
-  right: '8px',
-  padding: '4px 4px 4px 8px',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  borderRadius: '25%',
-  opacity: 0,
-  cursor: 'pointer',
-}
-
 const onBtnClick = (
   path: RequestPath,
   body: FormattedElement[],
@@ -52,32 +41,56 @@ const onBtnClick = (
 const modify = (settings: FormSchema, els: JQuery) => {
   els.each((i, el) => {
     const $el = $(el)
+    const elInfo = formatElement(el)
+    $el.off('mouseenter').off('mouseleave')
 
     if (settings.showAllPosts && $el.is('.javascript-hide')) {
       $el.removeClass('javascript-hide')
     }
 
-    const elInfo = formatElement(el)
+    if (settings.showToolbar) {
+      const btnBaseStyle = {
+        position: 'absolute',
+        top: '8px',
+        right: '8px',
+        padding: '4px 4px 4px 8px',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        borderRadius: '25%',
+        opacity: 0,
+        cursor: 'pointer',
+      }
+      const $inspectBtn = $('<div>')
+        .css(btnBaseStyle)
+        .text('🔍')
+        .on('click', onBtnClick.bind(null, RequestPath.Inspect, elInfo))
+      const $downloadBtn = $('<div>')
+        .css({ ...btnBaseStyle, right: `${8 + 38 * 1}px` })
+        .text('💾')
+        .on('click', onBtnClick.bind(null, RequestPath.Download, elInfo))
+      $el
+        .on('mouseenter', () => {
+          $inspectBtn.css({ opacity: 1 })
+          $downloadBtn.css({ opacity: 1 })
+        })
+        .on('mouseleave', () => {
+          $inspectBtn.css({ opacity: 0 })
+          $downloadBtn.css({ opacity: 0 })
+        })
+        .append([$inspectBtn, $downloadBtn])
+    }
 
-    const $inspectBtn = $('<div>')
-      .css(btnBaseStyle)
-      .text('🔍')
-      .on('click', onBtnClick.bind(null, RequestPath.Inspect, elInfo))
-    const $downloadBtn = $('<div>')
-      .css({ ...btnBaseStyle, right: `${8 + 38 * 1}px` })
-      .text('💾')
-      .on('click', onBtnClick.bind(null, RequestPath.Download, elInfo))
-
-    const originalCSS = $el.css(['position', 'z-index'])
-    const originalTransform = $el.css(['transform'])
-
-    $el
-      .off('mouseenter')
-      .on('mouseenter', () => {
-        $inspectBtn.css({ opacity: 1 })
-        $downloadBtn.css({ opacity: 1 })
-        if (settings.zoomCard) {
-          const { width, height, top, left, right } = el.getBoundingClientRect()
+    if (settings.zoomCard) {
+      const originalCSS = $el.css([
+        'position',
+        'z-index',
+        'background-color',
+        'transform',
+        'box-shadow',
+      ])
+      $el
+        .on('mouseenter', () => {
+          const { width, height, top, left, right, bottom } =
+            el.getBoundingClientRect()
           const ratio = document.documentElement.clientHeight / height
           const scaledTopOffset = (height / 2) * (ratio - 1) - top
           let scaledXOffset = 0
@@ -94,26 +107,24 @@ const modify = (settings: FormSchema, els: JQuery) => {
           $el.css({
             position: 'relative',
             'z-index': Z_INDEX_MAX,
+            backgroundColor: 'rgba(0,0,0,0.5)',
             transform: `translate(${scaledXOffset}px, ${scaledTopOffset}px) scale(${ratio})`,
-            transition: 'transform .25s .5s',
+            boxShadow: `0 0 0 ${Math.max(top, right, bottom, left)}px rgba(0,0,0,0.5)`,
+            transition:
+              'background-color .25s .5s, transform .25s .5s, box-shadow .25s .5s',
           })
-        }
-      })
-      .off('mouseleave')
-      .on('mouseleave', () => {
-        $inspectBtn.css({ opacity: 0 })
-        $downloadBtn.css({ opacity: 0 })
-        if (settings.zoomCard) {
+        })
+        .on('mouseleave', () => {
           $el.css({
-            ...originalTransform,
-            transition: 'transform .25s',
+            backgroundColor: originalCSS['background-color'],
+            transform: originalCSS.transform,
+            boxShadow: originalCSS['box-shadow'],
+            transition:
+              'background-color .25s, transform .25s, box-shadow .25s',
           })
-          setTimeout(() => {
-            $el.css(originalCSS)
-          }, 250)
-        }
-      })
-      .append(settings.showToolbar ? [$inspectBtn, $downloadBtn] : [])
+          setTimeout(() => $el.css(originalCSS), 250)
+        })
+    }
 
     $el.off('click')
     switch (settings.clickBehavior) {
