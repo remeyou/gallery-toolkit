@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import Greeting from '~components/custom/greeting'
 import { ThemeProvider } from '~components/theme-provider'
 import { Popover, PopoverContent, PopoverTrigger } from '~components/ui/popover'
+import { ScrollArea } from '~components/ui/scroll-area'
 import { Origins } from '~constants'
 import '~globals.css'
 import Localhost from '~pages/localhost'
@@ -20,7 +21,7 @@ function IndexSidePanel() {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen space-y-2 p-3 text-base">
+      <ScrollArea className="h-screen space-y-2 p-3 text-base">
         <div className="flex items-center justify-between">
           <Greeting />
           <Popover>
@@ -36,7 +37,7 @@ function IndexSidePanel() {
         </div>
         {origin === Origins.Localhost && <Localhost />}
         {origin === Origins.Yandere && <Yandere />}
-      </div>
+      </ScrollArea>
     </ThemeProvider>
   )
 }
