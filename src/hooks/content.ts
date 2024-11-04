@@ -9,7 +9,7 @@ import {
   Z_INDEX_MAX,
 } from '~constants'
 import { formatElement, sendMessage } from '~lib/utils'
-import type { FormSchema } from '~pages/settings'
+import { defaultFormValues, type FormSchema } from '~pages/settings'
 import type { FormattedElement } from '~typings'
 
 const collect = (elementSelector: string): Promise<JQuery<HTMLElement>> => {
@@ -139,12 +139,10 @@ const modify = (settings: FormSchema, els: JQuery) => {
 }
 
 export const useContentScript = () => {
-  const [formValues] = useStorage<FormSchema>(StorageKey.Settings, {
-    clickBehavior: ClickBehavior.Default,
-    showAllPosts: false,
-    showToolbar: true,
-    zoomCard: false,
-  })
+  const [formValues] = useStorage<FormSchema>(
+    StorageKey.Settings,
+    defaultFormValues,
+  )
 
   useEffect(() => {
     switch (location.origin) {

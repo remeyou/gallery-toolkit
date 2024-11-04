@@ -11,17 +11,19 @@ export type FormSchema = {
   zoomCard: boolean
 }
 
+export const defaultFormValues = {
+  clickBehavior: ClickBehavior.Default,
+  showAllPosts: false,
+  showToolbar: true,
+  zoomCard: false,
+}
+
 type Props = { origin: string }
 
 export default function Settings({ origin }: Props) {
   const [formValues, setFormValues] = useStorage<FormSchema>(
     StorageKey.Settings,
-    {
-      clickBehavior: ClickBehavior.Default,
-      showAllPosts: false,
-      showToolbar: true,
-      zoomCard: false,
-    },
+    defaultFormValues,
   )
 
   const { clickBehavior, showAllPosts, showToolbar, zoomCard } = formValues
