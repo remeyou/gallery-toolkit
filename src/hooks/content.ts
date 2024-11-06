@@ -53,9 +53,9 @@ const modify = (settings: FormSchema, els: JQuery) => {
         position: 'absolute',
         top: '8px',
         right: '8px',
-        padding: '4px 4px 4px 8px',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        borderRadius: '25%',
+        padding: '4px 6px',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        textAlign: 'center',
         opacity: 0,
         cursor: 'pointer',
       }

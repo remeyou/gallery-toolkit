@@ -10,19 +10,19 @@ export const enum ResponseCode {
 }
 
 export const enum RequestPath {
-  Inspect = '/inspect',
-  Download = '/download',
+  Inspect,
+  Download,
 }
 
 export enum ClickBehavior {
-  Default = 'default',
-  Inspect = 'inspect',
-  Download = 'download',
+  Default = 'Default',
+  Inspect = 'Inspect',
+  Download = 'Download',
 }
 
 export const enum StorageKey {
-  Settings = 'settings',
-  Theme = 'theme',
+  Settings = 'Settings',
+  Theme = 'Theme',
 }
 
 export const enum LoadStatus {

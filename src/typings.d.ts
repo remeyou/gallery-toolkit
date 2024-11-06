@@ -5,7 +5,7 @@ export type FormattedElement = {
 }
 
 export interface ReqParams<T = null> {
-  path: string
+  path: number
   body?: T
 }
 
