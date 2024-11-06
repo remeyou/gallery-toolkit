@@ -83,7 +83,6 @@ const modify = (settings: FormSchema, els: JQuery) => {
       const originalCSS = $el.css([
         'position',
         'z-index',
-        'background-color',
         'transform',
         'box-shadow',
       ])
@@ -107,20 +106,16 @@ const modify = (settings: FormSchema, els: JQuery) => {
           $el.css({
             position: 'relative',
             'z-index': Z_INDEX_MAX,
-            backgroundColor: 'rgba(0,0,0,0.5)',
             transform: `translate(${scaledXOffset}px, ${scaledTopOffset}px) scale(${ratio})`,
             boxShadow: `0 0 0 ${Math.max(top, right, bottom, left)}px rgba(0,0,0,0.5)`,
-            transition:
-              'background-color .25s .5s, transform .25s .5s, box-shadow .25s .5s',
+            transition: 'transform .25s .5s, box-shadow .25s .5s',
           })
         })
         .on('mouseleave', () => {
           $el.css({
-            backgroundColor: originalCSS['background-color'],
             transform: originalCSS.transform,
             boxShadow: originalCSS['box-shadow'],
-            transition:
-              'background-color .25s, transform .25s, box-shadow .25s',
+            transition: 'transform .25s, box-shadow .25s',
           })
           setTimeout(() => $el.css(originalCSS), 250)
         })
