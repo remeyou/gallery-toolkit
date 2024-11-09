@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Hint from '~components/custom/hint'
+import Cover from '~components/custom/cover'
 import SaveBtn from '~components/custom/save-btn'
 import { H4, Muted } from '~components/custom/typography'
 import { Badge } from '~components/ui/badge'
@@ -107,7 +107,7 @@ export default function Yandere() {
   }, [])
 
   if (!Object.keys(post).length) {
-    return <Hint />
+    return <Cover />
   }
   const {
     preview,

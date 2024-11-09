@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Hint from '~components/custom/hint'
+import Cover from '~components/custom/cover'
 import SaveBtn from '~components/custom/save-btn'
 import { H4, Muted } from '~components/custom/typography'
 import { LoadStatus, Origins, RequestPath, ResponseCode } from '~constants'
@@ -74,7 +74,7 @@ export default function Localhost() {
   }, [])
 
   if (!Object.keys(wallpaper).length) {
-    return <Hint />
+    return <Cover />
   }
   const { src, alt, title, desc, date } = wallpaper
   return (
