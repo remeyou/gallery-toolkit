@@ -1,3 +1,4 @@
+import { CircleCheck, CircleX } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import Cover from '~components/custom/cover'
 import SaveBtn from '~components/custom/save-btn'
@@ -73,32 +74,64 @@ const transform = (data: FormattedElement[]) => {
 
 export default function Yandere() {
   const [post, setPost] = useState<Post>({})
-  const [loading, setLoading] = useState<LoadStatus>(LoadStatus.Init)
+  const [postLoading, setPostLoading] = useState<LoadStatus>(LoadStatus.Init)
+  const [pool, setPool] = useState<(Post & { status?: LoadStatus })[]>([])
+  const [poolLoading, setPoolLoading] = useState<LoadStatus>(LoadStatus.Init)
 
   const onSave = (param: Post) => {
-    setLoading(LoadStatus.Loading)
-    const url = new URL(param.source ?? '')
-    const filename =
-      param.thumbPath?.replace('/', '_') ||
-      url.hostname + url.pathname.replaceAll('/', '_')
-    download(param.directLink, filename).then(setLoading)
+    setPostLoading(LoadStatus.Loading)
+    const filename = getFilename(param)
+    return download(param.directLink, filename).then(setPostLoading)
+  }
+
+  const onSavePool = async (idx: number) => {
+    setPoolLoading(LoadStatus.Loading)
+    const curr = pool[idx]
+    const filename = getFilename(curr)
+    const status = await download(curr.directLink, filename)
+    setPool((prev) => {
+      const next = [...prev]
+      next[idx].status = status
+      return next
+    })
+    if (idx < pool.length - 1) {
+      onSavePool(idx + 1)
+    } else {
+      setPoolLoading(
+        pool.some((p) => p.status === LoadStatus.Error)
+          ? LoadStatus.Error
+          : LoadStatus.Success,
+      )
+    }
   }
 
   useEffect(() => {
     chrome.runtime.onMessage.addListener(
-      (
-        msg: ReqParams<FormattedElement[]>,
-        sender,
-        sendResp: (response: ReqResponse) => void,
-      ) => {
+      (msg: ReqParams, sender, sendResp: (response: ReqResponse) => void) => {
         if (!sender.url?.includes(Origins.Yandere)) {
           return
         }
-        const result = { ...transform(msg.body ?? []), source: sender.url }
-        setLoading(LoadStatus.Init)
-        setPost(result)
-        if (msg.path === RequestPath.Download) {
-          onSave(result)
+        if (
+          [RequestPath.Inspect, RequestPath.Download].includes(msg.path) &&
+          Array.isArray(msg.body)
+        ) {
+          const result = { ...transform(msg.body), source: sender.url }
+          setPostLoading(LoadStatus.Init)
+          setPost(result)
+          msg.path === RequestPath.Download && onSave(result)
+        }
+        if (
+          RequestPath.List === msg.path &&
+          sender.url.includes('pool') &&
+          Array.isArray(msg.body)
+        ) {
+          setPoolLoading(LoadStatus.Init)
+          setPool(
+            msg.body.map((v) => ({
+              ...transform(v),
+              source: sender.url,
+            })),
+          )
         }
         sendResp({ code: ResponseCode.OK })
       },
@@ -106,7 +139,7 @@ export default function Yandere() {
     return () => chrome.runtime.onMessage.removeListener(() => null)
   }, [])
 
-  if (!Object.keys(post).length) {
+  if (!Object.keys(post).length && !pool.length) {
     return <Cover />
   }
   const {
@@ -135,7 +168,7 @@ export default function Yandere() {
           <Badge variant="secondary">{rating}</Badge>
         </div>
       )}
-      {!Number.isNaN(score) && (
+      {score && !Number.isNaN(score) && (
         <div className="space-x-2">
           <Muted>Score:</Muted>
           <span>{score}</span>
@@ -157,7 +190,37 @@ export default function Yandere() {
           <span>{user}</span>
         </div>
       )}
-      {directLink && <SaveBtn status={loading} onClick={() => onSave(post)} />}
+      {directLink && (
+        <SaveBtn status={postLoading} onClick={() => onSave(post)} />
+      )}
+      {Boolean(Object.keys(post).length) && <div className="mb-4" />}
+      {Boolean(pool.length) && (
+        <>
+          {pool.map((p) => (
+            <p className="flex gap-2 align-middle">
+              {p.thumbPath}
+              {p.status === LoadStatus.Success && <CircleCheck />}
+              {p.status === LoadStatus.Error && <CircleX />}
+            </p>
+          ))}
+          {pool.every((p) => p.directLink) && (
+            <SaveBtn
+              status={poolLoading}
+              onClick={onSavePool.bind(null, 0)}
+              initText="Save Pool"
+              savingText={`${pool.filter((p) => p.status === LoadStatus.Success).length}/${pool.length} Saving...`}
+            />
+          )}
+        </>
+      )}
     </div>
   )
+}
+
+function getFilename(param: Post) {
+  const url = new URL(param.source ?? '')
+  const filename =
+    param.thumbPath?.replace('/', '_') ||
+    url.hostname + url.pathname.replaceAll('/', '_')
+  return filename
 }

@@ -4,12 +4,12 @@ export type FormattedElement = {
   textContent?: string[]
 }
 
-export interface ReqParams<T = null> {
+export interface ReqParams<T = unknown> {
   path: number
   body?: T
 }
 
-export interface ReqResponse<T = null> {
+export interface ReqResponse<T = unknown> {
   code: number
   data?: T
 }

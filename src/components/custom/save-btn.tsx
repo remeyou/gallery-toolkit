@@ -1,20 +1,27 @@
 import { CircleCheck, CircleX, ImageDown, LoaderCircle } from 'lucide-react'
-import React from 'react'
+import React, { type ReactNode } from 'react'
 import { LoadStatus } from '~constants'
 import { Button } from '../ui/button'
 
 type Props = {
   onClick: React.MouseEventHandler<HTMLButtonElement>
   status: LoadStatus
+  initText?: ReactNode
+  savingText?: ReactNode
 }
 
-export default function SaveBtn({ onClick, status }: Props) {
+export default function SaveBtn({
+  onClick,
+  status,
+  initText,
+  savingText,
+}: Props) {
   switch (status) {
     case LoadStatus.Loading:
       return (
         <Button disabled>
           <LoaderCircle className="animate-spin" />
-          <span>Saving</span>
+          <span>{savingText ?? 'Saving'}</span>
         </Button>
       )
 
@@ -38,7 +45,7 @@ export default function SaveBtn({ onClick, status }: Props) {
       return (
         <Button onClick={onClick}>
           <ImageDown />
-          <span>Save</span>
+          <span>{initText ?? 'Save'}</span>
         </Button>
       )
   }

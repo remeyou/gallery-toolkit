@@ -12,6 +12,7 @@ export const enum ResponseCode {
 export const enum RequestPath {
   Inspect,
   Download,
+  List,
 }
 
 export enum ClickBehavior {

@@ -61,11 +61,11 @@ export default function Localhost() {
         if (!sender.url?.includes(Origins.Localhost)) {
           return
         }
-        const result = { ...transform(msg.body ?? []), source: sender.url }
-        setLoading(LoadStatus.Init)
-        setWallpaper(result)
-        if (msg.path === RequestPath.Download) {
-          onSave(result)
+        if ([RequestPath.Inspect, RequestPath.Download].includes(msg.path)) {
+          const result = { ...transform(msg.body ?? []), source: sender.url }
+          setLoading(LoadStatus.Init)
+          setWallpaper(result)
+          msg.path === RequestPath.Download && onSave(result)
         }
         sendResp({ code: ResponseCode.OK })
       },

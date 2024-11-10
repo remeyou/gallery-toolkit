@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { H4, Muted } from './typography'
+import { H4 } from './typography'
 
 interface Wallpaper {
   startdate: string
@@ -41,14 +41,12 @@ export default function Cover() {
       className="relative h-1/2 bg-cover bg-center"
       style={{ backgroundImage: `url("https://www.bing.com${url}")` }}
     >
-      <div className="absolute bottom-0 m-4 mb-0 bg-black/30 p-2">
+      <div className="absolute bottom-0 m-4 mb-0 bg-white/30 p-2 dark:bg-black/30">
         {<H4>{title}</H4>}
         {
-          <Muted>
-            <a className="hover:underline" href={copyrightlink} target="_blank">
-              {copyright}
-            </a>
-          </Muted>
+          <a className="hover:underline" href={copyrightlink} target="_blank">
+            {copyright}
+          </a>
         }
       </div>
     </div>

@@ -39,15 +39,15 @@ const onBtnClick = (
 }
 
 const modify = (settings: FormSchema, els: JQuery) => {
+  const list: FormattedElement[][] = []
   els.each((i, el) => {
     const $el = $(el)
     const elInfo = formatElement(el)
+    list.push(elInfo)
     $el.off('mouseenter').off('mouseleave')
-
     if (settings.showAllPosts && $el.is('.javascript-hide')) {
       $el.removeClass('javascript-hide')
     }
-
     if (settings.showToolbar) {
       const btnBaseStyle = {
         position: 'absolute',
@@ -78,7 +78,6 @@ const modify = (settings: FormSchema, els: JQuery) => {
         })
         .append([$inspectBtn, $downloadBtn])
     }
-
     if (settings.zoomCard) {
       const originalCSS = $el.css([
         'position',
@@ -120,7 +119,6 @@ const modify = (settings: FormSchema, els: JQuery) => {
           setTimeout(() => $el.css(originalCSS), 250)
         })
     }
-
     $el.off('click')
     switch (settings.clickBehavior) {
       case ClickBehavior.Inspect:
@@ -130,6 +128,10 @@ const modify = (settings: FormSchema, els: JQuery) => {
         $el.on('click', onBtnClick.bind(null, RequestPath.Download, elInfo))
         break
     }
+  })
+  sendMessage({
+    path: RequestPath.List,
+    body: list,
   })
 }
 
