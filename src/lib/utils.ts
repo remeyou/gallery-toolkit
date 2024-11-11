@@ -2,7 +2,13 @@ import { clsx, type ClassValue } from 'clsx'
 import { saveAs } from 'file-saver'
 import $ from 'jquery'
 import { twMerge } from 'tailwind-merge'
-import { LoadStatus, Origins, ResponseCode, Z_INDEX_MAX } from '~constants'
+import {
+  LoadStatus,
+  Origins,
+  ResponseCode,
+  SIDE_PANEL_CLOSED_ERROR,
+  Z_INDEX_MAX,
+} from '~constants'
 import type { FormattedElement, ReqParams, ReqResponse } from '~typings'
 
 /** Combine Class */
@@ -62,7 +68,7 @@ export const sendMessage = async <T = unknown, R = unknown>(
   try {
     return await new Promise((resolve, reject) => {
       const timeLimit = setTimeout(() => {
-        reject('Gallery Toolkit: Did you open the side panel?')
+        reject(SIDE_PANEL_CLOSED_ERROR)
       }, 500)
       chrome.runtime.sendMessage(msg, (resp: ReqResponse<R>) => {
         clearTimeout(timeLimit)
@@ -71,7 +77,15 @@ export const sendMessage = async <T = unknown, R = unknown>(
     })
   } catch (error) {
     console.error('sendMessage error: ', error)
-    toast(typeof error === 'string' ? error : JSON.stringify(error, null, 2))
+    let msg: string
+    if (error === undefined) {
+      msg = SIDE_PANEL_CLOSED_ERROR
+    } else if (typeof error !== 'string') {
+      msg = JSON.stringify(error, null, 2)
+    } else {
+      msg = error
+    }
+    toast(msg)
   }
 }
 

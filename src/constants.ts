@@ -35,3 +35,6 @@ export const enum LoadStatus {
 
 // 2**31 - 1
 export const Z_INDEX_MAX = 2147483647
+
+export const SIDE_PANEL_CLOSED_ERROR =
+  'Gallery Toolkit: Please open the side panel then.'
