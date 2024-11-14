@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { H4 } from './typography'
+import { H5, Muted } from './typography'
 
 interface Wallpaper {
   startdate: string
@@ -38,15 +38,17 @@ export default function Cover() {
   const { url, title, copyright, copyrightlink } = wallpaper
   return (
     <div
-      className="relative h-1/2 bg-cover bg-center"
+      className="group relative h-1/2 bg-cover bg-center"
       style={{ backgroundImage: `url("https://www.bing.com${url}")` }}
     >
-      <div className="absolute bottom-0 m-4 mb-0 bg-white/30 p-2 dark:bg-black/30">
-        {<H4>{title}</H4>}
+      <div className="absolute bottom-0 bg-white/70 p-2 opacity-0 transition-opacity group-hover:opacity-100 dark:bg-black/70">
+        {<H5>{title}</H5>}
         {
-          <a className="hover:underline" href={copyrightlink} target="_blank">
-            {copyright}
-          </a>
+          <Muted>
+            <a className="hover:underline" href={copyrightlink} target="_blank">
+              {copyright}
+            </a>
+          </Muted>
         }
       </div>
     </div>

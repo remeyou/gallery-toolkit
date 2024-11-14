@@ -33,6 +33,19 @@ export const H4 = ({ children, className }: TypographyProps) => {
   )
 }
 
+export const H5 = ({ children, className }: TypographyProps) => {
+  return (
+    <h5
+      className={cn(
+        'scroll-m-20 text-lg font-semibold tracking-tight',
+        className,
+      )}
+    >
+      {children}
+    </h5>
+  )
+}
+
 export const P = ({ children, className }: TypographyProps) => {
   return (
     <p className={cn('leading-7 [&:not(:first-child)]:mt-6', className)}>
