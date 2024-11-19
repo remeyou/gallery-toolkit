@@ -38,7 +38,7 @@ export default function Cover() {
   const { url, title, copyright, copyrightlink } = wallpaper
   return (
     <div
-      className="group relative h-1/2 bg-cover bg-center"
+      className="group relative h-[48rem] bg-cover bg-center"
       style={{ backgroundImage: `url("https://www.bing.com${url}")` }}
     >
       <div className="absolute bottom-0 bg-white/70 p-2 opacity-0 transition-opacity group-hover:opacity-100 dark:bg-black/70">

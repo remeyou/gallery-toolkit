@@ -21,12 +21,12 @@ function IndexSidePanel() {
 
   return (
     <ThemeProvider>
-      <ScrollArea className="h-screen space-y-2 p-3 text-base">
+      <ScrollArea className="h-screen p-3 text-base">
         <div className="flex items-center justify-between">
           <Greeting />
           <Popover>
             <PopoverTrigger>
-              <div className="rounded-full p-2 transition-colors ease-in-out hover:bg-black/5 dark:hover:bg-white/5">
+              <div className="rounded-full p-2 transition-colors duration-300 hover:bg-black/5 dark:hover:bg-white/5">
                 <SettingsIcon />
               </div>
             </PopoverTrigger>
