@@ -16,14 +16,14 @@ export const enum RequestPath {
 }
 
 export enum ClickBehavior {
-  Default = 'Default',
-  Inspect = 'Inspect',
-  Download = 'Download',
+  Default = 'default',
+  Inspect = 'inspect',
+  Download = 'download',
 }
 
 export const enum StorageKey {
-  Settings = 'Settings',
-  Theme = 'Theme',
+  Settings = 'settings',
+  Theme = 'theme',
 }
 
 export const enum LoadStatus {
