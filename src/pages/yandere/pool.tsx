@@ -14,8 +14,8 @@ export default function Pool({ pool, poolLoading, onSavePool }: Props) {
   return (
     <div className="flex flex-col items-start gap-1">
       {pool.map((p, idx) => (
-        <p className="flex h-9 gap-2 align-middle leading-9" key={p.thumbPath}>
-          {p.thumbPath}
+        <p className="flex h-9 items-center gap-2 leading-9" key={p.thumbPath}>
+          <span>{p.thumbPath}</span>
           {p.status === LoadStatus.Success && <CircleCheck />}
           {p.status === LoadStatus.Error && (
             <Button
