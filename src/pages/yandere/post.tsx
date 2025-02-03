@@ -1,14 +1,15 @@
-import SaveBtn from '~components/custom/save-btn'
-import { H4, Muted } from '~components/custom/typography'
-import { Badge } from '~components/ui/badge'
-import type { LoadStatus } from '~constants'
-import type { Post } from './hook'
+import LoadingImage from "~components/custom/loading-image";
+import SaveBtn from "~components/custom/save-btn";
+import { H4, Muted } from "~components/custom/typography";
+import { Badge } from "~components/ui/badge";
+import { LoadStatus } from "~constants";
+import type { Post } from "./hook";
 
 type Props = {
-  post: Post
-  postLoading: LoadStatus
-  onSave: (post: Post) => void
-}
+  post: Post;
+  postLoading: LoadStatus;
+  onSave: (post: Post) => void;
+};
 
 export default function Post({ post, postLoading, onSave }: Props) {
   const {
@@ -20,10 +21,12 @@ export default function Post({ post, postLoading, onSave }: Props) {
     score,
     user,
     directLink,
-  } = post
+  } = post;
   return (
     <div className="flex flex-col items-start gap-1">
-      {preview && <img src={preview} alt={thumbPath} width="100%" />}
+      {preview && (
+        <LoadingImage src={preview} alt={thumbPath} loading={postLoading} />
+      )}
       {thumbPath && <H4>{thumbPath}</H4>}
       {resolution && (
         <div className="space-x-2">
@@ -63,5 +66,5 @@ export default function Post({ post, postLoading, onSave }: Props) {
         <SaveBtn status={postLoading} onClick={() => onSave(post)} />
       )}
     </div>
-  )
+  );
 }
