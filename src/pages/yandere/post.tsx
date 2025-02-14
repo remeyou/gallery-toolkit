@@ -1,5 +1,5 @@
-import LoadingImage from "~components/custom/loading-image";
 import SaveBtn from "~components/custom/save-btn";
+import StatefulImage from "~components/custom/stateful-image";
 import { H4, Muted } from "~components/custom/typography";
 import { Badge } from "~components/ui/badge";
 import { LoadStatus } from "~constants";
@@ -25,7 +25,7 @@ export default function Post({ post, postLoading, onSave }: Props) {
   return (
     <div className="flex flex-col items-start gap-1">
       {preview && (
-        <LoadingImage src={preview} alt={thumbPath} loading={postLoading} />
+        <StatefulImage src={preview} alt={thumbPath} loading={postLoading} />
       )}
       {thumbPath && <H4>{thumbPath}</H4>}
       {resolution && (
