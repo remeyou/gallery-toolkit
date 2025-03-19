@@ -105,7 +105,6 @@ const modify = (settings: FormSchema, els: JQuery) => {
     }
   });
 
-  $(document).off("keyup");
   $(document).off("keydown");
   if (settings.keyboardNavigation) {
     $(document).on("keydown", (e) => {
@@ -117,7 +116,7 @@ const modify = (settings: FormSchema, els: JQuery) => {
     let cursor: number;
     let boxShadow: string;
     let originalCSS: JQuery.PlainObject<string> | null = null;
-    $(document).on("keyup", (e) => {
+    $(document).on("keydown", (e) => {
       if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
         if (cursor === undefined) {
           cursor = 0;
@@ -145,7 +144,11 @@ const modify = (settings: FormSchema, els: JQuery) => {
           --cursor;
         }
         const el = els[cursor];
-        el.scrollIntoView();
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
         boxShadow = modifyBoxShadow($(els[cursor]));
         return;
       }
