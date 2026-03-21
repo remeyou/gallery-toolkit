@@ -129,7 +129,7 @@ export function getLocation(tab: chrome.tabs.Tab) {
 export const modifyBoxShadow = ($el: JQuery<HTMLElement>) => {
   const boxShadow = $el.css("boxShadow");
   $el.css({
-    boxShadow: "0px 0px 50px 10px gray",
+    boxShadow: "gray 0px 0px 50px 10px inset",
   });
   return boxShadow;
 };
