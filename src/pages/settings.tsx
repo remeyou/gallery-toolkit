@@ -82,7 +82,7 @@ export default function Settings({ origin }: Props) {
             zoomCard,
           });
         }}
-        label="Zoom card"
+        label="Zoom card (right click)"
         disabled={keyboardNavigation}
         help={
           keyboardNavigation ? (

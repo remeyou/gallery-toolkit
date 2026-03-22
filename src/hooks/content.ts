@@ -83,15 +83,22 @@ const modify = (settings: FormSchema, els: JQuery) => {
     }
 
     if (settings.zoomCard) {
-      const originalCSS = $el.css([
-        "position",
-        "z-index",
-        "transform",
-        "box-shadow",
-      ]);
-      $el
-        .on("mouseenter", () => scaleLarge(el, true))
-        .on("mouseleave", () => scaleRestore($el, originalCSS));
+      let originalCSS: JQuery.PlainObject<string> | null = null;
+      $el.on("contextmenu", (e) => {
+        e.preventDefault();
+        if (originalCSS === null) {
+          originalCSS = $el.css([
+            "position",
+            "z-index",
+            "transform",
+            "box-shadow",
+          ]);
+          scaleLarge(el, false);
+        } else {
+          scaleRestore($el, originalCSS);
+          originalCSS = null;
+        }
+      });
     }
 
     $el.off("click");
@@ -131,13 +138,13 @@ const modify = (settings: FormSchema, els: JQuery) => {
         $el.css({
           boxShadow,
         });
-        if (e.key === "ArrowRight") {
+        if (["ArrowRight"].includes(e.key)) {
           if (cursor === els.length - 1) {
             cursor = -1;
           }
           ++cursor;
         }
-        if (e.key === "ArrowLeft") {
+        if (["ArrowLeft"].includes(e.key)) {
           if (cursor === 0) {
             cursor = els.length;
           }
@@ -157,7 +164,7 @@ const modify = (settings: FormSchema, els: JQuery) => {
         return;
       }
 
-      if ("ArrowUp" === e.key) {
+      if (["ArrowUp"].includes(e.key)) {
         if (originalCSS === null) {
           originalCSS = $(els[cursor]).css([
             "position",
@@ -170,7 +177,7 @@ const modify = (settings: FormSchema, els: JQuery) => {
           scaleRestore($(els[cursor]), originalCSS);
           originalCSS = null;
         }
-      } else if ("ArrowDown" == e.key) {
+      } else if (["ArrowDown"].includes(e.key)) {
         $(els[cursor]).trigger("click");
       }
     });
