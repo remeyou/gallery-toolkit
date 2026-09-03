@@ -9,5 +9,6 @@
     },
     "baseUrl": ".",
     "strict": true,
+    "types": ["node", "chrome"],
   },
 }

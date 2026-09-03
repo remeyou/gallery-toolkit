@@ -93,7 +93,7 @@ const modify = (settings: FormSchema, els: JQuery) => {
             "transform",
             "box-shadow",
           ]);
-          scaleLarge(el, false);
+          scaleLarge($el, false);
         } else {
           scaleRestore($el, originalCSS);
           originalCSS = null;
@@ -125,12 +125,12 @@ const modify = (settings: FormSchema, els: JQuery) => {
     let originalCSS: JQuery.PlainObject<string> | null = null;
     $(document).on("keydown", (e) => {
       if (["ArrowLeft", "ArrowRight"].includes(e.key)) {
+        const $el = $(els[cursor]);
         if (cursor === undefined) {
           cursor = 0;
-          boxShadow = modifyBoxShadow($(els[cursor]));
+          boxShadow = modifyBoxShadow($el);
           return;
         }
-        const $el = $(els[cursor]);
         if (originalCSS) {
           scaleRestore($el, originalCSS);
           originalCSS = null;
@@ -150,13 +150,12 @@ const modify = (settings: FormSchema, els: JQuery) => {
           }
           --cursor;
         }
-        const el = els[cursor];
-        el.scrollIntoView({
+        els[cursor].scrollIntoView({
           behavior: "smooth",
           block: "nearest",
           inline: "nearest",
         });
-        boxShadow = modifyBoxShadow($(els[cursor]));
+        boxShadow = modifyBoxShadow($el);
         return;
       }
 
@@ -165,16 +164,17 @@ const modify = (settings: FormSchema, els: JQuery) => {
       }
 
       if (["ArrowUp"].includes(e.key)) {
+        const $el = $(els[cursor]);
         if (originalCSS === null) {
-          originalCSS = $(els[cursor]).css([
+          originalCSS = $el.css([
             "position",
             "z-index",
             "transform",
             "box-shadow",
           ]);
-          scaleLarge(els[cursor], false);
+          scaleLarge($el, false);
         } else {
-          scaleRestore($(els[cursor]), originalCSS);
+          scaleRestore($el, originalCSS);
           originalCSS = null;
         }
       } else if (["ArrowDown"].includes(e.key)) {

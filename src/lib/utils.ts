@@ -134,9 +134,9 @@ export const modifyBoxShadow = ($el: JQuery<HTMLElement>) => {
   return boxShadow;
 };
 
-export const scaleLarge = (el: HTMLElement, delay: boolean) => {
+export const scaleLarge = ($el: JQuery<HTMLElement>, delay: boolean) => {
   const { width, height, top, left, right, bottom } =
-    el.getBoundingClientRect();
+    $el[0].getBoundingClientRect();
   const ratio = document.documentElement.clientHeight / height;
   const scaledTopOffset = (height / 2) * (ratio - 1) - top;
   let scaledXOffset = 0;
@@ -151,7 +151,7 @@ export const scaleLarge = (el: HTMLElement, delay: boolean) => {
       document.documentElement.clientWidth - right - scaledWidthDiff;
   }
   const transitionDelay = delay ? " .5s" : "";
-  $(el).css({
+  $el.css({
     position: "relative",
     "z-index": Z_INDEX_MAX,
     transform: `translate(${scaledXOffset}px, ${scaledTopOffset}px) scale(${ratio})`,
@@ -164,6 +164,7 @@ export const scaleRestore = (
   $el: JQuery<HTMLElement>,
   originalCSS: JQuery.PlainObject<string>,
 ) => {
+  console.log("🚀 ~ scaleRestore ~ originalCSS:", originalCSS);
   $el.css({
     position: originalCSS.position,
     transform: originalCSS.transform,
